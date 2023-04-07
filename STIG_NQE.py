@@ -9,7 +9,7 @@ sys.path.insert(0, '/Users/aricabeckstead/')
 import apiVb #type:ignore
 # EXAMPLE:
 # API_URL = "https://fwd.app/api/users/current/nqe/changes?action=addQuery&path=/{FOLDER}/{QUERY-NAME}"
-# TOKEN_FNSAAS = ('ACCESS-KEY', 'SECRET-KEY')
+# TOKEN = ('ACCESS-KEY', 'SECRET-KEY')
 
 API_URL = apiVb.API_URL
 TOKEN = apiVb.TOKEN_FNSAAS
