@@ -70,7 +70,7 @@ select {
 select {
   violation: isPresent(device.name),
   device: device.name,
-  interface: (foreach int in intViolation select int),
+  interface: (foreach int in intViolation select int.data.name),
   deviceModel: device.platform.model,
   mgmtIP: device.platform.managementIps,
   Severity: stigData.severity,
