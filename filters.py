@@ -53,7 +53,7 @@ def dictionary(pattern):
 interfaceViolation(device) = 
 foreach interface in patternMatches(device.files.config, `interface {name:string}`)
 let lines = (foreach child in interface.line.children select child)
-where'''
+'''
     select1 = '''
 select {
   violation: isPresent(device.name),
@@ -124,7 +124,7 @@ select {
             queryLine += '{} = ```\n'.format(n.replace(' ', '_').replace('-','_'))
             if 'interface' in n:
                if intCnt == 0:
-                   intQuery += ' !hasBlockMatch_alpha1(lines, {})'.format(n.replace(' ', '_').replace('-','_'))
+                   intQuery += 'where !hasBlockMatch_alpha1(lines, {})'.format(n.replace(' ', '_').replace('-','_'))
                    query.insert(2, 'let intViolation = interfaceViolation(device)')
                    intCnt =+ 1
                elif intCnt > 0:
