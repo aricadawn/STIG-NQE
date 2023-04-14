@@ -12,7 +12,7 @@ import apiVb #type:ignore
 # TOKEN = ('ACCESS-KEY', 'SECRET-KEY')
 
 API_URL = apiVb.API_URL
-TOKEN = apiVb.TOKEN_FNSAAS
+TOKEN = apiVb.TOKEN
 
 # JSON formatted NQE 
 nqe = '''
@@ -20,7 +20,7 @@ nqe = '''
 '''
 
 NQE_txt = 'queries.txt'
-STIG_csv = 'Cisco IOS XE Router RTR V2R6.csv'
+STIG_csv = 'Cisco IOS-XE Router RTR V2R6.csv'
 creat_dir = 'https://fwd.app/api/users/current/nqe/changes?action=addDir&path=/Arica/{}/'.format(STIG_csv.strip('.csv'))
 
 def STIG_NQE(NQE_txt, STIG_csv):

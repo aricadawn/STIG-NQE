@@ -154,7 +154,8 @@ select {
     else:
        end = select1
     where = 'where '+' || '.join(i for i in where)
-    query.append(where)
+    if len(where) > 6:
+       query.append(where)
     query.append(end)
     query = '\n'.join(i for i in query)
     return queryLine, query
