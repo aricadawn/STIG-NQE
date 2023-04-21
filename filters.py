@@ -1,6 +1,9 @@
 import re
 
 def text(fix_content):
+    '''
+    Returns list of configurations from Fix Content section of STIG
+    '''
     lines = []
     for line in fix_content.splitlines():
         if re.search(r'#', line):
@@ -12,6 +15,9 @@ def text(fix_content):
     return lines
 
 def test(checkLines, fix):
+    '''
+    Compares check content and fix content sections for whether config should be present in device
+    '''
     lines = []
     linesTest = []
     for item in checkLines:
@@ -30,9 +36,9 @@ def test(checkLines, fix):
     return lines
 
 def pattern(check_content, fix_content): 
-    """
-    Filters Check Content portion of STIG to collect configuration and create a list of pattern variables. 
-    """
+    '''
+    Filters Check Content portion of STIG to remove descriptions and collect configuration to create a list of pattern variables. 
+    '''
     mode = False
     lines = []
     for line in check_content.splitlines():
@@ -90,10 +96,11 @@ def pattern(check_content, fix_content):
     return lines
 
 def dictionary(pattern):
-    """
+    '''
     1. Creates a dictionary of pattern variables by filtering through list created in pattern function.
     2. Returns pattern variables and formatted query as strings 
-    """
+    '''
+
     query = [
        'foreach device in network.devices',
        'where device.platform.os == stigData.os',
@@ -134,6 +141,7 @@ foreach command in outputs.commands
 where command.commandText == "{}"
 let showOutput = parseConfigBlocks(device.platform.os, command.response)
 let match = max(blockMatches_alpha1(showOutput, show))'''
+
     show = []
     isPresent = []
     showCount = 0
@@ -149,10 +157,10 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
     ipCnt = 1
     counter = False
     for num, item in enumerate(pattern):
-        """
+        '''
         1. Reformats items returned in pattern to match configuration syntax
         2. Creates dictionary of pattern variables 
-        """
+        '''
         ipFilters = r' (x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3}).(x|\d{1,3})'
         name = r' ([A-Z\d]+(?:_[A-Z\d]+)+)'
         if re.search(ipFilters, item):
@@ -225,12 +233,11 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
     configCnt = 1
     where = []
     for key in patternVars:
-        """
+        '''
         1. Creates unique query variables for each requirement
         2. Creates interface function to return a list of violating interfaces
         3. Formats query to search device configuration for pattern and return violating devices
-        """
-
+        '''
         if (len(patternVars[key]) > 1 or (key.startswith('interface') and len(patternVars[key]) > 0)):
             queryLine += '{} = ```\n'.format(key.split('{')[0].rstrip().replace(' ', '_').replace('.', '').replace('-', '_').replace('(', '').replace(')', ''))
             if 'interface' in key:
