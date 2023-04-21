@@ -20,9 +20,9 @@ nqe = '''
 '''
 
 STIG_csv = [
-# 'Cisco ASA Firewall V1R3.csv',
-# 'Cisco ASA NDM V1R3.csv',
-# 'Cisco ASA VPN V1R1.csv',
+'Cisco ASA Firewall V1R3.csv',
+'Cisco ASA NDM V1R3.csv',
+'Cisco ASA VPN V1R1.csv',
 'Cisco IOS Router NDM V2R4.csv',
 'Cisco IOS Router RTR V2R3.csv',
 'Cisco IOS Switch L2S V2R3.csv',
