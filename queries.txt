@@ -1,1 +1,6888 @@
+show = ```
+The output will list the following information for each certificate:
+Common Name (CN) of the issuer
+Organization Unit (OU) of the issuer
+Organization (O) of the issuer
+ Validity Date
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show crypto ca certificates"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
 
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+snmp-server group V3GROUP v3 auth read V3READ write V3WRITE 
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: None
+Group-name: V3GROUP
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show snmp user"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+snmp-server group V3GROUP v3 priv read V3READ write V3WRITE
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: AES256
+Group-name: V3GROUP
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show snmp user"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+www.cisco.com/c/en/us/support/ios-nx-os-software
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show version"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+Switch#
+```;
+show = ```
+VTP Version capable : 1 to 3
+VTP version running : 1
+VTP Domain Name : 
+VTP Pruning Mode : Disabled
+VTP Traps Generation : Disabled
+Device ID : 5e00.0000.8000
+Feature VLAN:
+--------------
+VTP Operating Mode : Off
+Maximum VLANs supported locally : 1005
+Number of existing VLANs : 5
+Configuration Revision : 0
+MD5 digest : 0x57 0xCD 0x40 0x65 0x63 0x59 0x47 0xBD 
+ 0x56 0x9D 0x4A 0x3E 0xA5 0x69 0x35 0xBC 
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show vtp status"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+Name: Gi0/0
+Switchport: Enabled
+Administrative Mode: dynamic auto
+Operational Mode: static access
+Administrative Trunking Encapsulation: negotiate
+Operational Trunking Encapsulation: native
+Negotiation of Trunking: On
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show interfaces switchport "
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+VLAN Name Status Ports
+---- -------------------------------- --------- -------------------------------
+ 1 default active 
+ 10 User VLAN active Gi0/3, Gi1/0, Gi1/1, Gi1/2
+ Gi1/3, Gi2/1
+ 20 Management VLAN active Gi0/2
+ 999 VLAN0999 active Gi2/0
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show vlan"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+Port Mode Encapsulation Status Native vlan
+Gi0/1 on 802.1q trunking 1
+Gi0/2 on 802.1q trunking 1
+Port Vlans allowed on trunk
+Gi0/1 1-998,1000-4094
+Gi0/2 1-4094
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show interfaces trunk"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+snmp-server group V3GROUP v3 auth read V3READ write V3WRITE 
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: None
+Group-name: V3GROUP
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show snmp user"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+snmp-server group V3GROUP v3 priv read V3READ write V3WRITE
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: AES256
+Group-name: V3GROUP
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show snmp user"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+www.cisco.com/c/en/us/support/ios-nx-os-software
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show version"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+VTP Status Information
+----------------------
+VTP Version : 2 (capable)
+Configuration Revision : 0
+Maximum VLANs supported locally : 1005
+Number of existing VLANs : 5
+VTP Operating Mode : Transparent
+VTP Domain Name : XXXXX
+VTP Pruning Mode : Disabled (Operationally Disabled)
+VTP V2 Mode : Disabled
+VTP Traps Generation : Disabled
+MD5 Digest : 0x0C 0x5E 0xC3 0x74 0x3F 0xB0 0x2F 0x49
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show vtp status"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+VLAN Name Status Ports
+---- -------------------------------- --------- -------------------------------
+ 1 default active Eth1/1, Eth1/2
+ 10 VLAN0010 active Eth1/1, Eth1/2, Eth1/3, Eth1/4
+ Eth1/5, Eth1/6, Eth1/7, Eth1/8
+ Eth1/9, Eth1/10, Eth1/11
+ Eth1/12, Eth1/13, Eth1/14
+ Eth1/15, Eth1/16, Eth1/17
+ Eth1/18, Eth1/19, Eth1/20
+ Eth1/21, Eth1/22, Eth1/23
+ Eth1/24, Eth1/25, Eth1/26
+ Eth1/27, Eth1/28, Eth1/29
+ Eth1/30
+ 11 VLAN0011 active Eth1/1, Eth1/2, Eth1/31
+ Eth1/32, Eth1/33, Eth1/34
+ Eth1/35, Eth1/36, Eth1/37
+ Eth1/38, Eth1/39, Eth1/40 
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show vlan"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}show = ```
+--------------------------------------------------------------------------------
+Port Native Status Port
+ Vlan Channel
+--------------------------------------------------------------------------------
+Eth1/1 1 trunking --
+Eth1/2 1 trunking --
+--------------------------------------------------------------------------------
+Port Vlans Allowed on Trunk
+--------------------------------------------------------------------------------
+Eth1/1 1-998,1000-4094
+Eth1/2 1-998,1000-4094
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show interface trunk"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+
+select {
+  violation: !isPresent(match),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+snmp-server user NETOPS network-operator auth sha 0xb40efa3f311006de39b9d0725e663277d84ca332 localizedkey
+snmp-server host {ip1: ipv4Address} traps version 3 auth NETOPS
+```;
+show = ```
+______________________________________________________________
+ SNMP USERS 
+______________________________________________________________
+User Auth Priv(enforce) Groups acl_filter 
+____ ____ ___________ ______ __________ 
+NETOPS sha no network-operator 
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show snmp user"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}pattern = ```
+snmp-server user NETOPS auth sha 5Er23@#as178 priv aes-128 
+```;
+show = ```
+______________________________________________________________
+ SNMP USERS 
+______________________________________________________________
+User Auth Priv(enforce) Groups acl_filter 
+____ ____ ___________ ______ __________ 
+NETOPS sha aes-128 network-operator 
+```;
+foreach device in network.devices
+where device.platform.os == stigData.os
+let outputs = device.outputs
+foreach command in outputs.commands
+where command.commandText == "show snmp user"
+let showOutput = parseConfigBlocks(device.platform.os, command.response)
+let match = max(blockMatches_alpha1(showOutput, show))
+let config = max(blockMatches_alpha1(device.files.config, pattern))
+
+select {
+  violation: !isPresent(match) || !isPresent(config),
+  device: device.name,
+  deviceModel: device.platform.model,
+  mgmtIP: device.platform.managementIps,
+  Severity: stigData.severity,
+  Group_Title: stigData.groupTitle,
+  Vuln_ID: stigData.vulnId,
+  Rule_ID: stigData.ruleId,
+  Rule_Version: stigData.ruleVersion
+}interface_1 = ```
+ nameif INSIDE
+ security-level 100
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+access-group INSIDE _IN in interface INSIDE 
+access-list INSIDE _IN extended permit tcp any any eq www 
+access-list INSIDE _IN extended permit tcp any any eq https 
+access-list INSIDE _IN extended deny ip any any log
+```;
+disable = ```
+ asp rule-engine transactional-commit access-group
+```;
+pattern = ```
+group-policy VPN_POLICY internal
+group-policy VPN_POLICY attributes
+ vpn-filter value RESTRICT_VPN
+access-list RESTRICT_VPN extended deny ip any any log
+```;
+pattern = ```
+access-list OUTSIDE_OUT extended deny ip any any log
+logging enable
+```;
+pattern = ```
+logging enable
+logging timestamp
+```;
+pattern = ```
+logging enable
+logging buffered informational
+logging queue 8192
+logging host NDM_INTERFACE {ip1: ipv4Address} 6/1514
+```;
+pattern = ```
+logging host NDM_INTERFACE {ip1: ipv4Address} 6/1514
+logging permit-hostdown
+```;
+disable = ```
+ http server enable
+ telnet {ip1: ipv4Address} {ip2: ipv4Address} INSIDE
+```;
+pattern = ```
+threat-detection basic-threat
+```;
+interface_1 = ```
+ nameif OUTSIDE
+ security-level 0
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+access-group OUTSIDE_IN in interface OUTSIDE
+access-list OUTSIDE_IN extended permit tcp any any eq www 
+access-list OUTSIDE_IN extended permit tcp any any eq https 
+access-list OUTSIDE_IN extended permit tcp any any eq domain 
+access-list OUTSIDE_IN extended permit tcp any any eq ftp 
+access-list OUTSIDE_IN extended permit tcp any any eq ftp-data 
+access-list OUTSIDE_IN extended permit udp any any eq sip 
+access-list OUTSIDE_IN extended deny ip any any log
+```;
+pattern = ```
+logging trap notifications
+logging host NDM_INTERFACE {subnet1: ipv4Subnet}
+```;
+pattern = ```
+logging enable
+logging host NDM_INTERFACE {ip1: ipv4Address} 6/1514
+logging permit-hostdown
+logging mail errors
+logging from-address firewall@mail.mil
+logging recipient-address OurFWadmin@mail.mil level errors
+logging recipient-address OurISSO@mail.mil level errors
+smtp-server {ip3: ipv4Address}
+```;
+pattern = ```
+threat-detection scanning-threat shun
+```;
+pattern = ```
+access-list OUTSIDE_2_DMZ extended permit tcp any host {ip1: ipv4Address} eq www 
+access-list OUTSIDE_2_DMZ extended permit tcp any host {ip3: ipv4Address} eq https 
+access-list OUTSIDE_2_DMZ extended permit tcp any host {ip5: ipv4Address} eq ftp 
+access-list OUTSIDE_2_DMZ extended permit tcp any host {ip7: ipv4Address} eq ftp-data 
+access-list OUTSIDE_2_DMZ extended deny ip any any log
+access-group  OUTSIDE_2_DMZ in interface OUTSIDE
+```;
+interface_1 = ```
+ nameif INSIDE
+ security-level 100
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+access-group INSIDE_2_OUT in interface INSIDE
+access-list INSIDE_2_OUT extended permit tcp any any eq www 
+access-list INSIDE_2_OUT extended permit tcp any any eq https 
+access-list INSIDE_2_OUT extended permit tcp any any eq domain 
+access-list INSIDE_2_OUT extended permit tcp any any eq ftp 
+access-list INSIDE_2_OUT extended permit tcp any any eq ftp-data 
+access-list INSIDE_2_OUT extended permit tcp any host {ip1: ipv4Address} eq ssh
+access-list INSIDE_2_OUT extended deny ip any any log
+```;
+interface_1 = ```
+ nameif INSIDE
+ security-level 100
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+access-group INSIDE_IN out interface INSIDE
+access-list INSIDE_IN extended deny udp any any eq snmp 
+access-list INSIDE_IN extended deny udp any any eq snmptrap
+access-list INSIDE_IN extended deny udp any any eq ntp 
+access-list INSIDE_IN extended deny udp any any eq syslog
+access-list INSIDE_IN extended deny tcp any any eq 22 
+access-list INSIDE_IN extended deny tcp any any eq tacacs
+access-list INSIDE_IN extended permit ip any any 
+```;
+crypto_ikev1 = ```
+crypto ikev1 policy 10
+ authentication pre-share
+ encryption aes-256
+ hash sha
+ group 5
+ lifetime 3600
+```; 
+pattern = ```
+crypto ipsec ikev1 transform-set IPSEC_TRANSFORM esp-aes-192 esp-sha-hmac 
+crypto map IPSEC_CRYPTO_MAP 1 match address MANAGEMENT_TRAFFIC
+crypto map IPSEC_CRYPTO_MAP 1 set peer {ip1: ipv4Address} 
+crypto map IPSEC_CRYPTO_MAP 1 set ikev1 transform-set IPSEC_TRANSFORM
+crypto map IPSEC_CRYPTO_MAP 1 set security-association lifetime seconds 3600
+crypto map IPSEC_CRYPTO_MAP interface OUTSIDE
+tunnel-group {ip3: ipv4Address} type ipsec-l2l
+tunnel-group {ip5: ipv4Address} ipsec-attributes
+ ikev1 pre-shared-key 
+crypto isakmp identity address 
+crypto ikev1 enable OUTSIDE
+access-list MANAGEMENT_TRAFFIC extended permit udp any eq snmp {ip7: ipv4Address} {ip8: ipv4Address} 
+access-list MANAGEMENT_TRAFFIC extended permit udp any eq {ip9: ipv4Address} {ip10: ipv4Address} snmptrap
+access-list MANAGEMENT_TRAFFIC extended permit udp any eq syslog {ip11: ipv4Address} {ip12: ipv4Address} 
+access-list MANAGEMENT_TRAFFIC extended permit tcp any eq ssh {ip13: ipv4Address} {ip14: ipv4Address} 
+```;
+pattern = ```
+service-policy global_policy global  
+```;
+policy_map_global_policy = ```
+policy-map global_policy
+ class inspection_default
+  inspect ipv6 IPV6_MAP
+```; 
+policy_map_type = ```
+policy-map type inspect ipv6 IPV6_MAP
+ parameters
+ match header hop-by-hop
+  drop log
+```; 
+match_header = ```
+match header routing-type range 3 255
+  drop log
+ match header destination-option
+  drop log
+```; 
+object_group_network = ```
+object-group network LAN_SUBNETS
+ network-object {ip1: ipv4Address} {ip2: ipv4Address}
+ network-object {ip3: ipv4Address} {ip4: ipv4Address}
+ network-object {ip5: ipv4Address} {ip6: ipv4Address}
+ network-object {ip7: ipv4Address} {ip8: ipv4Address}
+```; 
+pattern = ```
+ip verify reverse-path interface INSIDE
+access-group INSIDE_IN in interface INSIDE
+access-list INSIDE_IN extended permit ip object-group LAN_SUBNETS any 
+access-list INSIDE_IN extended deny ip any any
+```;
+pattern = ```
+threat-detection basic-threat
+threat-detection scanning-threat
+logging mail warnings
+logging from-address firewall@mail.mil
+logging recipient-address OurFWadmin@mail.mil level warnings
+logging recipient-address OurISSO@mail.mil level warnings
+smtp-server {ip1: ipv4Address}
+```;
+pattern = ```
+quota management-session 2
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+ssh {ip1: ipv4Address} {ip2: ipv4Address} INSIDE
+```;
+pattern = ```
+banner login You are accessing a U.S. Government (USG) Information System (IS) that is provided
+banner login for USG-authorized use only.
+banner login 
+banner login By using this IS (which includes any device attached to this IS), you consent to the
+banner login following conditions:
+banner login -The USG routinely intercepts and monitors communications on this IS for purposes
+banner login including, but not limited to, penetration testing, COMSEC monitoring, network
+banner login operations and defense, personnel misconduct (PM), law enforcement (LE), and 
+banner login counterintelligence (CI) investigations.
+banner login -At any time, the USG may inspect and seize data stored on this IS.
+banner login -Communications using, or data stored on, this IS are not private, are subject to routine
+banner login monitoring, interception, and search, and may be disclosed or used for any USG-
+banner login authorized purpose.
+banner login -This IS includes security measures (e.g., authentication and access controls) to protect
+banner login USG interests--not for your personal benefit or privacy.
+banner login -Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI
+banner login investigative searching or monitoring of the content of privileged communications, or 
+banner login work product, related to personal representation or services by attorneys, 
+banner login psychotherapists, or clergy, and their assistants.  Such communications and work product
+banner login are private and banner login confidential.  See User Agreement for details.
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging timestamp
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+disable = ```
+ http server enable
+ telnet {ip1: ipv4Address} {ip2: ipv4Address} INSIDE
+```;
+pattern = ```
+username LAST_RESORT password {password1: string} $sha512$5000$tb2eaIcI/Q5Q==$ScFJI1ChS4gIjXw== pbkdf2 privilege 15
+user-identity default-domain LOCAL
+aaa authentication serial console RADIUS_GROUP LOCAL
+aaa authentication ssh console RADIUS_GROUP LOCAL
+```;
+pattern = ```
+fips enable
+ssh version 2
+ssh cipher encryption fips
+ssh key-exchange group dh-group14-sha1
+```;
+pattern = ```
+password-policy minimum-length 15
+```;
+pattern = ```
+password-policy minimum-uppercase 1
+```;
+pattern = ```
+password-policy minimum-lowercase 1
+```;
+pattern = ```
+password-policy minimum-numeric 1
+```;
+pattern = ```
+password-policy minimum-special 1
+```;
+pattern = ```
+password-policy minimum-changes 8
+```;
+pattern = ```
+http server idle-timeout 10
+ssh timeout 10
+console timeout 10
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging flash-bufferwrap
+logging flash-minimum-free 
+logging flash-maximum-allocation 
+```;
+pattern = ```
+logging trap critical
+logging host NDM_INTERFACE {ip1: ipv4Address}
+```;
+pattern = ```
+ntp server {ip1: ipv4Address}
+ntp server {ip3: ipv4Address} prefer
+```;
+pattern = ```
+logging timestamp
+```;
+pattern = ```
+clock timezone EST -5 0
+```;
+pattern = ```
+snmp-server group NETOPS v3 priv 
+snmp-server user FWADMIN NETOPS v3 engineID  encrypted auth sha  
+snmp-server host NDM_INTERFACE {ip1: ipv4Address}  version 3 FWADMIN
+```;
+pattern = ```
+snmp-server group NETOPS v3 priv 
+snmp-server user FWADMIN NETOPS v3 engineID  encrypted auth sha  priv aes  
+snmp-server host NDM_INTERFACE {ip1: ipv4Address}  version 3 FWADMIN
+```;
+pattern = ```
+ntp authentication-key 1 md5 
+ntp authenticate
+ntp trusted-key 1
+ntp server {ip1: ipv4Address} key 1 prefer
+ntp server {ip3: ipv4Address} key 1
+```;
+pattern = ```
+fips enable
+ssh version 2
+ssh cipher encryption fips
+ssh key-exchange group dh-group14-sha1
+snmp-server group NETOPS v3 auth 
+snmp-server user FWADMIN NETOPS v3 engineID  encrypted auth sha  
+snmp-server host NDM_INTERFACE {ip1: ipv4Address}  version 3 FWADMIN
+```;
+pattern = ```
+fips enable
+ssh version 2
+ssh cipher encryption fips
+ssh key-exchange group dh-group14-sha1
+```;
+pattern = ```
+threat-detection basic-threat
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging timestamp
+logging buffered informational
+```;
+pattern = ```
+logging enable
+logging buffered informational
+```;
+pattern = ```
+logging trap notifications
+logging host NDM_INTERFACE {ip1: ipv4Address} 6/1514
+```;
+pattern = ```
+aaa authentication serial console RADIUS_GROUP LOCAL
+aaa authentication ssh console RADIUS_GROUP LOCAL
+aaa-server RADIUS_GROUP protocol radius
+aaa-server RADIUS_GROUP (NDM_INTERFACE) host {ip1: ipv4Address}
+ key 
+```;
+event_manager = ```
+event manager applet BACKUP_CONFIG
+  event syslog pattern "SYSLOG_CONFIG_I"
+  action 1 cli command "copy startup-config scp://userx:xxxxxxx@10.1.48.10//opt/config_backup" 
+  action 2 syslog priority informational msg "Configuration backup was executed"
+```; 
+show = ```
+The output will list the following information for each certificate:
+Common Name (CN) of the issuer
+Organization Unit (OU) of the issuer
+Organization (O) of the issuer
+ Validity Date
+```;
+pattern = ```
+logging trap notifications
+logging host NDM_INTERFACE {ip1: ipv4Address} 6/1514
+```;
+pattern = ```
+logging class vpn trap notifications 
+logging class vpnc trap notifications 
+logging class vpnfo trap notifications 
+logging class webfo trap notifications 
+logging class webvpn trap notifications 
+logging class svc trap notifications
+```;
+pattern = ```
+logging enable
+logging timestamp
+```;
+pattern = ```
+logging permit-hostdown 
+logging queue 8192
+```;
+pattern = ```
+logging trap critical
+logging host NDM_INTERFACE {ip1: ipv4Address} 6/1514
+```;
+pattern = ```
+crypto ca trustpoint CA_X
+The output will list the following information for each certificate:
+Common Name (CN) of the issuer
+Organization Unit (OU) of the issuer
+Organization (O) of the issuer
+Validity Date
+```;
+pattern = ```
+crypto ca trustpoint CA_X
+ revocation-check ocsp
+```;
+pattern = ```
+crypto ikev2 policy 1
+crypto ikev2 enable OUTSIDE
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+```;
+pattern = ```
+crypto ikev2 policy 1
+crypto ikev2 enable OUTSIDE
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+```;
+pattern = ```
+crypto ikev2 policy 1
+ encryption aes-192
+```;
+pattern = ```
+crypto map IPSEC_CRYPTO_MAP 1 set pfs group5
+crypto map IPSEC_CRYPTO_MAP 1 set peer {ip1: ipv4Address} 
+crypto map IPSEC_CRYPTO_MAP 1 set ikev2 ipsec-proposal IPSEC_TRANS
+```;
+pattern = ```
+crypto ikev2 policy 1
+ integrity sha256
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+ protocol esp integrity sha-256
+```;
+pattern = ```
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+ protocol esp encryption aes-192
+```;
+crypto_ikev2 = ```
+crypto ikev2 policy 1
+ encryption aes-256
+ group 24
+```; 
+pattern = ```
+crypto ikev2 policy 1
+ integrity sha256
+```;
+pattern = ```
+crypto map IPSEC_MAP 10 set ikev2 ipsec-proposal AES_SHA
+crypto ipsec ikev2 ipsec-proposal AES_SHA
+ protocol esp integrity sha-384 sha-256
+```;
+pattern = ```
+crypto map IPSEC_MAP 10 match address SITE1_SITE2
+crypto map IPSEC_MAP 10 set peer {ip1: ipv4Address}
+```;
+tunnel_group = ```
+tunnel-group {ip3: ipv4Address} ipsec-attributes
+ ikev2 remote-authentication pre-shared-key 
+ ikev2 local-authentication pre-shared-key 
+```; 
+pattern = ```
+tunnel-group {ip1: ipv4Address} type ipsec-l2l
+```;
+crypto_ikev2 = ```
+crypto ikev2 policy 2
+ encryption aes-256
+ integrity null
+ group 19
+ prf sha384
+```; 
+pattern = ```
+crypto map CSNA_MAP 10 set ikev2 ipsec-proposal aes-256
+crypto ipsec ikev2 ipsec-proposal AES-256
+ protocol esp encryption aes-256
+```;
+pattern = ```
+crypto map IPSEC_MAP 10 match address SITE1_SITE2
+crypto map IPSEC_MAP 10 set peer {ip1: ipv4Address} 
+crypto map IPSEC_MAP 10 set security-association lifetime seconds 3600
+```;
+pattern = ```
+crypto ikev2 policy 2
+ lifetime seconds 86400
+```;
+pattern = ```
+aaa-server LDAP protocol ldap
+aaa-server LDAP (INSIDE) host {ip1: ipv4Address}
+```;
+tunnel_group_ANY_CONNECT = ```
+tunnel-group ANY_CONNECT general-attributes
+ authorization-server-group LDAP
+ authorization-required
+```; 
+pattern = ```
+tunnel-group ANY_CONNECT type remote-access
+aaa-server LDAP protocol ldap
+aaa-server LDAP (INSIDE) host {ip1: ipv4Address}
+ ldap-over-ssl enable
+```;
+pattern = ```
+tunnel-group ANY_CONNECT type remote-access
+tunnel-group ANY_CONNECT webvpn-attributes
+ authentication certificate
+```;
+pattern = ```
+tunnel-group ANY_CONNECT type remote-access
+tunnel-group ANY_CONNECT webvpn-attributes
+ authentication certificate
+```;
+tunnel_group_ANY_CONNECT = ```
+tunnel-group ANY_CONNECT general-attributes
+ authorization-server-group LDAP
+ authorization-required
+ username-from-certificate use-entire-name
+```; 
+pattern = ```
+tunnel-group ANY_CONNECT type remote-access
+```;
+pattern = ```
+group-policy GROUP_POLICY_ANYCONNECT attributes
+ banner value I've read & consent to terms in IS user agreem't.
+```;
+pattern = ```
+logging class vpn trap notifications 
+logging class vpnc trap notifications 
+logging class vpnfo trap notifications 
+logging class webfo trap notifications 
+logging class webvpn trap notifications 
+logging class svc trap notifications
+```;
+pattern = ```
+logging class vpn trap notifications 
+logging class vpnc trap notifications 
+logging class vpnfo trap notifications 
+logging class webfo trap notifications 
+logging class webvpn trap notifications 
+logging class svc trap notifications
+```;
+pattern = ```
+logging class vpn trap notifications 
+logging class vpnc trap notifications 
+logging class vpnfo trap notifications 
+logging class webfo trap notifications 
+logging class webvpn trap notifications 
+logging class svc trap notifications
+```;
+pattern = ```
+logging class vpn trap notifications 
+logging class vpnc trap notifications 
+logging class vpnfo trap notifications 
+logging class webfo trap notifications 
+logging class webvpn trap notifications 
+logging class svc trap notifications
+```;
+pattern = ```
+ssl server-version tlsv1.2 dtlsv1.2
+```;
+pattern = ```
+ssl server-version tlsv1.2
+ssl cipher tlsv1.2 fips
+```;
+pattern = ```
+ASA Version x.x
+hostname {host: string}
+fips enable 
+```;
+pattern = ```
+crypto ikev2 policy 1
+ integrity sha256
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+ protocol esp integrity sha-256
+```;
+pattern = ```
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+ protocol esp encryption aes-192
+```;
+pattern = ```
+crypto ipsec ikev2 ipsec-proposal IPSEC_TRANS
+ protocol esp encryption aes-192
+```;
+pattern = ```
+tunnel-group ANY_CONNECT type remote-access
+tunnel-group ANY_CONNECT webvpn-attributes
+ authentication certificate
+```;
+pattern = ```
+group-policy ANY_CONNECT_GROUP attributes
+ split-tunnel-policy tunnelall
+```;
+pattern = ```
+logging host INDM_INTERFACE {ip1: ipv4Address}
+logging class svc trap notifications
+```;
+crypto_ca = ```
+crypto ca trustpoint CA_X
+ validation-usage ipsec-client
+ validation-usage ssl-client
+```; 
+crypto_ikev2 = ```
+crypto ikev2 policy 2
+ encryption aes-256
+ integrity null
+ group 19
+ prf sha384
+```; 
+pattern = ```
+crypto map CSNA_MAP 10 set ikev2 ipsec-proposal AES-256
+crypto ipsec ikev2 ipsec-proposal AES-256
+ protocol esp encryption aes-256
+```;
+pattern = ```
+ip http secure-server 
+ip http max-connections 2 
+line vty 0 1 
+transport input ssh 
+line vty 2 4 
+transport input none 
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+line_vty = ```
+line vty 0 1
+ access-class MANAGEMENT_NET in
+ transport input ssh
+```; 
+ip_access_list = ```
+ip access-list extended MANAGEMENT_NET 
+ permit ip {ip1: ipv4Address} {ip2: ipv4Address} any
+ deny   ip any any log-input
+```; 
+pattern = ```
+login block-for 900 attempts 3 within 120
+```;
+pattern = ```
+banner login ^C
+You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.
+By using this IS (which includes any device attached to this IS), you consent to the following conditions:
+-The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.
+-At any time, the USG may inspect and seize data stored on this IS.
+-Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.
+-This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.
+-Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.
+^C
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+hostname {host: string}
+logging userinfo
+```;
+pattern = ```
+service timestamps log datetime localtime
+```;
+pattern = ```
+ip access-list extended BLOCK_INBOUND
+ deny  icmp any any log-input
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+file privilege 10 
+```;
+pattern = ```
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+file privilege 10 
+```;
+pattern = ```
+file privilege 10 
+```;
+disable = ```
+ boot network
+ ip boot server
+ ip bootp server
+ ip dns server
+ ip identd
+ ip finger
+ ip http server
+ ip rcmd rcp-enable
+ ip rcmd rsh-enable
+ service config
+ service finger
+ service tcp-small-servers
+ service udp-small-servers
+ service pad
+```;
+pattern = ```
+username  privilege 10 common-criteria-policy PASSWORD_POLICY password {password1: string} 
+aaa authentication login default group tacacs+ local
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ min-length 15
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ upper-case 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+lower-case 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ numeric-count 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ special-case 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ char-changes 8
+```;
+pattern = ```
+service password-encryption
+```;
+pattern = ```
+ip http secure-server
+ip http timeout-policy idle 600 life  requests 
+line con 0
+ exec-timeout 10 0
+line vty 0 1
+ exec-timeout 10 0
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+logging buffered  informational
+```;
+pattern = ```
+logging trap critical
+```;
+pattern = ```
+ntp server {ip1: ipv4Address}
+ntp server y.y.y.y
+```;
+pattern = ```
+snmp-server group V3GROUP v3 auth read V3READ write V3WRITE 
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: None
+Group-name: V3GROUP
+```;
+pattern = ```
+snmp-server group V3GROUP v3 priv read V3READ write V3WRITE
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: AES256
+Group-name: V3GROUP
+```;
+pattern = ```
+ntp authentication-key 1 md5 121B0A151012 7
+ntp authenticate
+ntp trusted-key 1
+ntp server {ip1: ipv4Address} key 1
+ntp server y.y.y.y key 1
+```;
+pattern = ```
+ip ssh version 2
+ip ssh server algorithm mac hmac-sha2-256
+```;
+pattern = ```
+ip ssh version 2
+ip ssh server algorithm encryption aes256-ctr aes192-ctr aes128-ctr
+ip http secure-server
+ip http secure-ciphersuite aes-128-cbc-sha 
+ip http secure-client-auth
+ip http secure-trustpoint CA_XXX
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+login on-failure log
+login on-success log
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+line_con = ```
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+```; 
+line_vty = ```
+line vty 0 1
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+```; 
+pattern = ```
+aaa new-model
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+radius-server host {ip1: ipv4Address} auth-port 1645 acct-port 1646 key 
+```;
+event_manager = ```
+event manager applet BACKUP_CONFIG
+ event syslog pattern "%SYS-5-CONFIG_I"
+ action 1 info type routername
+ action 2 cli command "enable"
+ action 3 cli command "copy run tftp" pattern "remote host"
+ action 4 cli command "x.x.x.x" pattern "filename"
+ action 5 cli command "$_info_routername-config"
+ action 6 syslog priority informational msg "Configuration backup was executed"
+```; 
+pattern = ```
+crypto pki trustpoint CA_X
+```;
+pattern = ```
+logging {ip1: ipv4Address}
+```;
+show = ```
+www.cisco.com/c/en/us/support/ios-nx-os-software
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SERVER_TRAFFIC in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_SERVER_TRAFFIC
+ permit tcp any {ip1: ipv4Address} {ip2: ipv4Address} eq lpd 631 9100
+ permit tcp any {ip3: ipv4Address} {ip4: ipv4Address} eq 1433 1434 4022
+ permit icmp any any
+ permit ospf any any
+ deny   ip any any
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip router isis
+ isis authentication mode md5
+ isis authentication key-chain ISIS_KEY_CHAIN
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 
+```; 
+interface_4 = ```
+ ip rip authentication mode md5
+ ip rip authentication key-chain RIP_KEY_CHAIN
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN
+ key 1
+   key-string {key1: string}
+   send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+   accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+   cryptographic-algorithm hmac-sha-256
+ key 2
+   key-string {key2: string}
+   send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+   accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+   cryptographic-algorithm hmac-sha-256
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip ospf authentication key-chain OSPF_KEY_CHAIN
+```; 
+interface_1 = ```
+ shutdown
+```; 
+disable = ```
+ boot network
+ service config
+ cns config initial
+ cns exec
+ cns image
+ cns trusted-server config {ip1: ipv4Address}
+ cns trusted-server image {ip3: ipv4Address}
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL
+ permit icmp any any
+ permit ospf host {ip11: ipv4Address} host {ip12: ipv4Address}
+ deny   ip any host {ip13: ipv4Address} log-input
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip access-group INTERNAL_ACL in
+```; 
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL
+ deny icmp any host {ip9: ipv4Address} fragments
+ permit icmp any any
+```; 
+disable = ```
+ ip gratuitous-arps
+```;
+disable = ```
+interface {name1:string}
+ ip directed-broadcast
+```;
+ip_access_list = ```
+ip access-list ext ICMP_T3C1C13
+ permit icmp any any host-unreachable
+ permit icmp any any administratively-prohibited
+```; 
+pattern = ```
+ip icmp rate-limit unreachable df 100
+ip icmp rate-limit unreachable 100000
+route-map LOCAL_POLICY
+ ip address {ip: ipv4Address}
+set interface Null0
+ip local policy route-map LOCAL_POLICY
+```;
+disable = ```
+interface {name1:string}
+ ip unreachables
+```;
+disable = ```
+interface {name1:string}
+ ip mask-reply
+```;
+disable = ```
+interface {name1:string}
+ ip redirects
+```;
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny   ip any any log
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny   ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny   ip any any log-input
+```; 
+pattern = ```
+line aux 0
+transport input none
+```;
+disable = ```
+ exec
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} host {ip2: ipv4Address} eq bgp
+ permit tcp host {ip3: ipv4Address} eq bgp host {ip4: ipv4Address}
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ permit tcp any host {ip9: ipv4Address} eq www
+ deny   ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ permit tcp any any established
+ permit udp host {ip1: ipv4Address} host {ip2: ipv4Address} eq ntp
+ deny   ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ deny   ip {ip1: ipv4Address} {ip2: ipv4Address} any log-input
+ deny   ip {ip3: ipv4Address} {ip4: ipv4Address} any log-input
+ deny   ip {ip5: ipv4Address} {ip6: ipv4Address} any log-input
+ deny   ip {ip7: ipv4Address} {ip8: ipv4Address} any log-input
+ deny   ip {ip9: ipv4Address} {ip10: ipv4Address} any log-input
+ deny   ip {ip11: ipv4Address} {ip12: ipv4Address} any log-input
+ deny   ip {ip13: ipv4Address} {ip14: ipv4Address} any log-input
+ deny   ip {ip15: ipv4Address} {ip16: ipv4Address} any log-input
+ deny   ip {ip17: ipv4Address} {ip18: ipv4Address} any log-input
+ deny   ip {ip19: ipv4Address} {ip20: ipv4Address} any log-input
+ deny   ip {ip21: ipv4Address} {ip22: ipv4Address} any log-input
+ deny   ip {ip23: ipv4Address} {ip24: ipv4Address} any log-input
+ deny   ip {ip25: ipv4Address} {ip26: ipv4Address} any log-input
+ deny   ip {ip27: ipv4Address} {ip28: ipv4Address} any log-input
+ permit tcp any any established
+ permit tcp host {ip29: ipv4Address} host {ip30: ipv4Address} eq bgp
+ permit tcp host {ip31: ipv4Address} eq bgp host {ip32: ipv4Address}
+ permit icmp host {ip33: ipv4Address} host {ip34: ipv4Address} echo
+ permit icmp host {ip35: ipv4Address} host {ip36: ipv4Address} echo-reply
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_ISP in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_ISP
+ permit tcp any any established
+ permit icmp host {ip1: ipv4Address} host {ip2: ipv4Address} echo
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo-reply
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit tcp any host {ip7: ipv4Address} eq www
+ permit 50 any host {ip9: ipv4Address}
+ permit 51 any host {ip11: ipv4Address}
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ no auto-summary
+```; 
+router_ospf = ```
+router ospf 1
+ log-adjacency-changes
+ redistribute static subnets
+ network {ip1: ipv4Address} {ip2: ipv4Address} area 0
+```; 
+router_eigrp = ```
+router eigrp 1
+ network {ip3: ipv4Address} {ip4: ipv4Address}
+ redistribute static
+```; 
+router_rip = ```
+router rip
+ version 2
+ redistribute static
+ network {ip5: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor {ip7: ipv4Address} remote-as 
+ no auto-summary
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in
+```; 
+disable = ```
+interface {name1:string}
+ lldp transmit
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ no cdp enable
+```; 
+disable = ```
+interface {name1:string}
+ ip proxy-arp
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_OUTBOUND out
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_OUTBOUND
+ deny   tcp any any eq tacacs log-input
+ deny   tcp any any eq 22 log-input
+ deny   udp any any eq snmp log-input
+ deny   udp any any eq snmptrap log-input
+ deny   udp any any eq syslog log-input
+ permit tcp any any eq www log-input
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ crypto map IPSEC_MGMT_MAP
+```; 
+crypto_isakmp = ```
+crypto isakmp policy 10
+ authentication pre-share
+ hash sha256
+ crypto isakmp key  address {ip1: ipv4Address}
+```; 
+crypto_map = ```
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer {ip3: ipv4Address}
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+```; 
+pattern = ```
+crypto IPsec transform-set TRANS_SET ah-sha256-hmac esp-aes 
+ip access-list extended MGMT_TRAFFIC_ACL
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group MGMT_TRAFFIC_ACL out
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ crypto map IPSEC_MGMT_MAP
+```; 
+crypto_map = ```
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer {ip1: ipv4Address}
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+```; 
+pattern = ```
+ip access-list extended MGMT_TRAFFIC_ACL
+```;
+router_ospf = ```
+router ospf 2 vrf PROD
+ log-adjacency-changes
+ network {ip3: ipv4Address} {ip4: ipv4Address} area 0
+```; 
+pattern = ```
+ip vrf MGMT
+```;
+disable = ```
+ route-target import 8:8
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group TRAFFIC_FROM_NOC in
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group TRAFFIC_TO_NOC in
+```; 
+ip_access_list = ```
+ip access-list extended TRAFFIC_TO_NOC
+ deny   ip any host {ip5: ipv4Address} log-input
+ deny   ip any host {ip7: ipv4Address} log-input
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group INGRESS_MANAGEMENT_ACL in
+ ip access-group EGRESS_MANAGEMENT_ACL out
+```; 
+pattern = ```
+ip access-list extended EGRESS_MANAGEMENT_ACL
+ deny   ip any any log-input
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ crypto map IPSEC_MGMT_MAP
+```; 
+crypto_isakmp = ```
+crypto isakmp policy 10
+ authentication pre-share
+ hash sha256
+ crypto isakmp key  address {ip1: ipv4Address}
+```; 
+crypto_map = ```
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer {ip3: ipv4Address}
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+```; 
+pattern = ```
+crypto ipsec transform-set TRANS_SET ah-sha256-hmac esp-aes 
+ip access-list extended MGMT_TRAFFIC_ACL
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip9: ipv4Address} remote-as 
+ neighbor {ip11: ipv4Address} route-map FILTER_PREFIX_MAP
+ neighbor {ip13: ipv4Address} remote-as 
+ neighbor {ip15: ipv4Address} route-map FILTER_PREFIX_MAP
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 15 deny {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 20 deny {subnet7: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 25 deny {subnet9: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 30 deny {subnet11: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 35 deny {subnet13: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 40 deny {subnet15: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 45 deny {subnet17: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 50 deny {subnet19: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 55 deny {subnet21: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 60 deny {subnet23: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 65 deny {subnet25: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 70 deny {subnet27: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet29: ipv4Subnet} ge 8
+route-map FILTER_PREFIX_MAP permit 10
+ ip address {ip: ipv4Address}
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list PREFIX_FILTER in
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} prefix-list PREFIX_FILTER in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 74 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 64514
+ neighbor {ip3: ipv4Address} prefix-list FILTER_PREFIXES_CUST1 in
+ neighbor {ip5: ipv4Address} remote-as 64516
+ neighbor {ip7: ipv4Address} prefix-list FILTER_PREFIXES_CUST2 in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER_CUST1 seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST1 seq 10 deny {subnet3: ipv4Subnet} ge 8
+ip prefix-list PREFIX_FILTER_CUST2 seq 5 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST2 seq 10 deny {subnet7: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 64512
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 64514
+ neighbor {ip3: ipv4Address} prefix-list CE_PREFIX_ADVERTISEMENTS out
+ neighbor {ip5: ipv4Address} remote-as 64516
+ neighbor {ip7: ipv4Address} prefix-list CE_PREFIX_ADVERTISEMENTS out
+```; 
+pattern = ```
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 10 permit {subnet3: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 15 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 20 permit {subnet7: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 80 deny {subnet9: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list FILTER _CORE_PREFIXES out
+```; 
+pattern = ```
+ip prefix-list FILTER_CORE_PREFIXES seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 15 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ no bgp enforce-first-as
+```; 
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} filter-list 10 in
+```; 
+pattern = ```
+ip as-path access-list 10 permit ^yy$
+ip as-path access-list 10 deny .*
+```;
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} maximum-prefix 
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} maximum-prefix 
+```; 
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list FILTER_PREFIX_LENGTH in
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} prefix-list FILTER_PREFIX_LENGTH in
+```; 
+pattern = ```
+ip prefix-list FILTER_PREFIX_LENGTH seq 5 permit {subnet1: ipv4Subnet} ge 8 le 24
+ip prefix-list FILTER_PREFIX_LENGTH seq 10 deny {subnet3: ipv4Subnet} le 32
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ no bgp enforce-first-as
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} update-source Loopback0
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+mpls ldp router-id Loopback0
+```;
+router_isis = ```
+router isis
+ mpls ldp sync
+ net 49.0001.1234.1600.5531.00
+```; 
+pattern = ```
+router ospf 1
+ mpls ldp sync
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ mpls traffic-eng tunnels
+ mpls ip
+```; 
+pattern = ```
+mpls traffic-eng tunnels
+ip rsvp signaling rate-limit period 30 burst 9 maxsize 2100 limit 50
+```;
+disable = ```
+ mpls ip propagate-ttl
+```;
+interface_1 = ```
+ description {desc: string}
+ ip vrf forwarding COI1
+ ip address {ip: ipv4Address}
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip vrf forwarding COI2
+ ip address {ip: ipv4Address}
+```; 
+ip_vrf = ```
+ip vrf CUST1
+ rd 13:13
+ route-target export 13:13
+ route-target import 13:13
+```; 
+pattern = ```
+ip vrf CUST1
+ rd 13:13
+```;
+pattern = ```
+mpls label protocol ldp
+```;
+interface_1 = ```
+ xconnect {ip1: ipv4Address} 55 encapsulation mpls
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+```; 
+ip_access_list = ```
+ip access-list extended BLOCK_TO_CORE
+ deny   ip any {ip1: ipv4Address} {ip2: ipv4Address} log-input
+ permit ip any any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+ ip verify unicast source reachable-via any
+```; 
+class_C2_VOICE = ```
+class C2_VOICE
+    priority percent 10
+ class VOICE
+    priority percent 15
+ class VIDEO
+    bandwidth percent 25
+```; 
+class_CONTROL_PLANE = ```
+class CONTROL_PLANE
+    priority percent 10
+ class PREFERRED_DATA
+    bandwidth percent 25
+ class class-default
+    bandwidth percent 15
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all PREFERRED_DATA
+ match ip dscp af33
+policy-map QOS_POLICY
+```;
+policy_map_QOS_POLICY = ```
+policy-map QOS_POLICY
+ class CONTROL_PLANE
+    priority percent 10
+ class C2_VOICE
+    priority percent 10
+ class VOICE
+    priority percent 15
+ class VIDEO
+    bandwidth percent 25
+ class PREFERRED_DATA
+    bandwidth percent 25
+ class class-default
+    bandwidth percent 15
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all C2_VOICE
+ match ip dscp 47
+```;
+pattern = ```
+class-map match-all SCAVENGER
+match ip dscp cs1
+policy-map QOS_POLICY
+class SCAVENGER
+bandwidth percent 5
+class class-default
+bandwidth percent 10
+```;
+disable = ```
+ class class-default
+```;
+disable = ```
+interface {name1:string}
+ ip pim sparse-mode
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim neighbor-filter PIM_NEIGHBORS
+ ip pim sparse-mode
+```; 
+pattern = ```
+ip access-list standard PIM_NEIGHBORS
+ permit {ip1: ipv4Address}
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip multicast boundary MULTICAST_SCOPE
+```; 
+ip_access_list = ```
+ip access-list standard MULTICAST_SCOPE
+ deny   {ip1: ipv4Address} {ip2: ipv4Address}
+ permit any
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip11: ipv4Address} host {ip12: ipv4Address} eq 639
+ deny   tcp any host {ip13: ipv4Address} eq 639 log
+ permit tcp host {ip15: ipv4Address} host {ip16: ipv4Address} eq bgp
+ permit tcp host {ip17: ipv4Address} eq bgp host {ip18: ipv4Address}
+ permit pim host {ip19: ipv4Address} pim host {ip20: ipv4Address}
+ deny ip any any log
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip pim sparse-mode
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-register list PIM_REGISTER_FILTER
+ip pim rp-address {ip9: ipv4Address}
+ip pim register-rate-limit 
+```;
+ip_access_list = ```
+ip access-list extended PIM_REGISTER_FILTER
+ deny   ip any {ip3: ipv4Address} {ip4: ipv4Address}
+ permit ip host {ip5: ipv4Address} any
+ permit ip host {ip7: ipv4Address} any
+ deny   ip any any
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-register list PIM_REGISTER_FILTER
+```;
+ip_access_list = ```
+ip access-list standard FILTER_PIM_JOINS
+ deny   {ip5: ipv4Address} {ip6: ipv4Address}
+ permit any
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-rp {ip3: ipv4Address} FILTER_PIM_JOINS
+```;
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim register-rate-limit 
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip igmp access-group IGMP_JOIN_FILTER
+ ip igmp version 3
+```; 
+ip_access_list = ```
+ip access-list standard IGMP_JOIN_FILTER
+ deny   {ip1: ipv4Address} {ip2: ipv4Address}
+ permit any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip igmp access-group IGMP_JOIN_FILTER
+ ip igmp version 3
+```; 
+ip_access_list = ```
+ip access-list extended IGMP_JOIN_FILTER
+ deny   ip any {ip1: ipv4Address} {ip2: ipv4Address}
+ permit ip {ip3: ipv4Address} {ip4: ipv4Address} any
+ deny   ip any any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip igmp limit 
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim spt-threshold infinity
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip pim sparse-mode
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} host {ip2: ipv4Address} eq 639
+ deny   tcp any host {ip3: ipv4Address} eq 639 log
+ permit tcp host {ip5: ipv4Address} host {ip6: ipv4Address} eq bgp
+ permit tcp host {ip7: ipv4Address} eq bgp host {ip8: ipv4Address}
+ permit pim host {ip9: ipv4Address} pim host {ip10: ipv4Address}
+ deny ip any any log
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 8
+```;
+ip_access_list = ```
+ip access-list extended INBOUND_MSDP_SA_FILTER
+ deny   ip any host {ip5: ipv4Address}
+ deny   ip any host {ip7: ipv4Address}
+ deny   ip any host {ip9: ipv4Address}
+ deny   ip any host {ip11: ipv4Address}
+ deny   ip any host {ip13: ipv4Address}
+ deny   ip any host {ip15: ipv4Address}
+ deny   ip any host {ip17: ipv4Address}
+ deny   ip any host {ip19: ipv4Address}
+ deny   ip any {ip21: ipv4Address} {ip22: ipv4Address}
+ deny   ip any {ip23: ipv4Address} {ip24: ipv4Address}
+ deny   ip {ip25: ipv4Address} {ip26: ipv4Address} any
+ deny   ip {ip27: ipv4Address} {ip28: ipv4Address} any
+ deny   ip {ip29: ipv4Address} {ip30: ipv4Address} any
+ deny   ip {ip31: ipv4Address} {ip32: ipv4Address} any
+ permit ip any any
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 2
+ip msdp sa-filter in {ip3: ipv4Address} list INBOUND_MSDP_SA_FILTER
+```;
+ip_access_list = ```
+ip access-list extended OUTBOUND_MSDP_SA_FILTER
+ deny   ip {ip5: ipv4Address} {ip6: ipv4Address} any
+ permit ip any any
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 8
+ip msdp sa-filter out {ip3: ipv4Address} list OUTBOUND_MSDP_SA_FILTER
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 
+ip msdp sa-filter in {ip3: ipv4Address} list MSDP_SA_FILTER
+ip msdp sa-limit X.1.28.2 
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Loopback12 remote-as 
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+```; 
+key_chain = ```
+key chain EIGRP_KEY
+ key 1
+  key-string {key1: string}
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip router isis
+ isis password {password2: string} 
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip ospf authentication-key 
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN
+ key 1
+   key-string {key1: string}
+   send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+   accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+ key 2
+   key-string {key2: string}
+   send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+   accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+```; 
+disable = ```
+ call-home
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip verify unicast source reachable-via rx
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in
+```; 
+ip_access_list = ```
+ip access-list extended EGRESS_FILTER
+ permit udp {ip1: ipv4Address} {ip2: ipv4Address} any eq domain
+ permit tcp {ip3: ipv4Address} {ip4: ipv4Address} any eq ftp
+ permit tcp {ip5: ipv4Address} {ip6: ipv4Address} any eq ftp-data
+ permit tcp {ip7: ipv4Address} {ip8: ipv4Address} any eq www
+ permit icmp {ip9: ipv4Address} {ip10: ipv4Address} any
+ permit icmp {ip11: ipv4Address} {ip12: ipv4Address} any echo
+ deny   ip any any
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL
+ permit tcp any any established
+ deny   ip any any option any-options
+ deny   ip any any log-input
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} ttl-security hops 1
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} ttl-security hops 1
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} remote-as 
+```; 
+pattern = ```
+ip options drop
+```;
+pattern = ```
+IPv6 Example: ipv6 cef
+```;
+pattern = ```
+ipv6 hop-limit 128
+```;
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 nd ra suppress
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny ipv6 any any log undetermined-transport
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ permit ipv6 any host 2001:DB8::1:1:1234 routing-type 2
+ deny ipv6 any any log routing
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny hbh any any dest-option-type 4 log
+ deny hbh any any dest-option-type 195 log
+ deny hbh any any dest-option-type home-address log 
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 5 log
+ deny 60 any any dest-option-type 194 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 138 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 195 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 2
+ deny any any dest-option-type 3
+ deny any any dest-option-type 6
+ deny any any dest-option-type 9
+ deny any any dest-option-type 10
+ deny any any dest-option-type 11
+ deny any any dest-option-type 12
+ deny any any dest-option-type 13
+ deny any any dest-option-type 14
+ deny any any dest-option-type 16
+ deny any any dest-option-type 34
+ deny any any dest-option-type 36
+ deny any any dest-option-type 37
+ deny any any dest-option-type 39
+ deny any any dest-option-type 47
+ deny any any dest-option-type 49
+ deny any any dest-option-type 255
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ switchport access vlan 12
+ switchport mode access
+ authentication port-control auto
+ dot1x pae authenticator
+```; 
+interface_2 = ```
+ switchport access vlan 13
+ switchport mode access
+ authentication port-control auto
+ dot1x pae authenticator
+```; 
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS
+ server name RADIUS_1
+ server name RADIUS_2
+```; 
+pattern = ```
+aaa new-model
+aaa authentication dot1x default group RADIUS_SERVERS
+dot1x system-auth-control
+```;
+pattern = ```
+Switch#
+```;
+show = ```
+VTP Version capable : 1 to 3
+VTP version running : 1
+VTP Domain Name : 
+VTP Pruning Mode : Disabled
+VTP Traps Generation : Disabled
+Device ID : 5e00.0000.8000
+Feature VLAN:
+--------------
+VTP Operating Mode : Off
+Maximum VLANs supported locally : 1005
+Number of existing VLANs : 5
+Configuration Revision : 0
+MD5 digest : 0x57 0xCD 0x40 0x65 0x63 0x59 0x47 0xBD 
+ 0x56 0x9D 0x4A 0x3E 0xA5 0x69 0x35 0xBC 
+```;
+pattern = ```
+mls qos
+```;
+interface_1 = ```
+ spanning-tree guard root
+```; 
+interface_1 = ```
+ spanning-tree bpduguard enable
+```; 
+pattern = ```
+hostname {host: string}
+spanning-tree mode pvst
+spanning-tree loopguard default
+```;
+interface_1 = ```
+ switchport block unicast
+```; 
+pattern = ```
+hostname {host: string}
+ip dhcp snooping vlan 2,4-8,11
+ip dhcp snooping
+```;
+interface_1 = ```
+ ip verify source
+```; 
+pattern = ```
+hostname {host: string}
+ip arp inspection vlan 2,4-8,11
+```;
+interface_1 = ```
+ switchport access vlan 12
+```; 
+pattern = ```
+storm-control unicast level bps 62000000
+storm-control broadcast level bps 20000000
+```;
+disable = ```
+ ip igmp snooping
+ ip igmp snooping vlan 11
+```;
+pattern = ```
+spanning-tree mode rapid-pvst
+spanning-tree mode mst
+```;
+interface_1 = ```
+ udld port
+```; 
+pattern = ```
+hostname {host: string}
+udld enable
+ 
+```;
+show = ```
+Name: Gi0/0
+Switchport: Enabled
+Administrative Mode: dynamic auto
+Operational Mode: static access
+Administrative Trunking Encapsulation: negotiate
+Operational Trunking Encapsulation: native
+Negotiation of Trunking: On
+```;
+interface_1 = ```
+ switchport access vlan 999
+ shutdown
+```; 
+interface_4 = ```
+ switchport trunk allowed vlan 1-998,1000-4094
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+```; 
+show = ```
+VLAN Name Status Ports
+---- -------------------------------- --------- -------------------------------
+ 1 default active 
+ 10 User VLAN active Gi0/3, Gi1/0, Gi1/1, Gi1/2
+ Gi1/3, Gi2/1
+ 20 Management VLAN active Gi0/2
+ 999 VLAN0999 active Gi2/0
+```;
+show = ```
+Port Mode Encapsulation Status Native vlan
+Gi0/1 on 802.1q trunking 1
+Gi0/2 on 802.1q trunking 1
+Port Vlans allowed on trunk
+Gi0/1 1-998,1000-4094
+Gi0/2 1-4094
+```;
+pattern = ```
+ip add {ip1: ipv4Address} {ip2: ipv4Address}
+```;
+disable = ```
+ shut
+```;
+interface_1 = ```
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ negotiation auto
+```; 
+interface_2 = ```
+ switchport access vlan 11
+ negotiation auto
+```; 
+interface_3 = ```
+ switchport access vlan 12
+ negotiation auto
+```; 
+interface_1 = ```
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 44
+ switchport mode trunk
+ negotiation auto
+```; 
+interface_1 = ```
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 44
+ switchport mode trunk
+ negotiation auto
+```; 
+interface_2 = ```
+ switchport access vlan 11
+ negotiation auto
+```; 
+interface_3 = ```
+ switchport access vlan 12
+ negotiation auto
+```; 
+pattern = ```
+ip http secure-server
+ip http max-connections 2
+line vty 2 4
+ transport input none
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+line_vty = ```
+line vty 0 1
+ access-class MANAGEMENT_NET in
+ transport input ssh
+```; 
+iip_access_list = ```
+iip access-list extended MANAGEMENT_NET 
+ permit ip {ip1: ipv4Address} {ip2: ipv4Address} any
+ deny   ip any any log-input
+```; 
+pattern = ```
+login block-for 900 attempts 3 within 120
+```;
+pattern = ```
+banner login ^C
+You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.
+By using this IS (which includes any device attached to this IS), you consent to the following conditions:
+-The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.
+-At any time, the USG may inspect and seize data stored on this IS.
+-Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.
+-This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.
+-Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.
+^C
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+hostname {host: string}
+logging userinfo
+```;
+pattern = ```
+service timestamps log datetime localtime
+```;
+pattern = ```
+ip access-list extended BLOCK_INBOUND
+ deny icmp any any log-input
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+file privilege 10 
+```;
+pattern = ```
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+file privilege 10 
+```;
+pattern = ```
+logging persistent url disk0:/logfile size 134217728 filesize 16384
+file privilege 10 
+```;
+disable = ```
+ boot network
+ ip boot server
+ ip bootp server
+ ip dns server
+ ip identd
+ ip finger
+ ip http server
+ ip rcmd rcp-enable
+ ip rcmd rsh-enable
+ service config
+ service finger
+ service tcp-small-servers
+ service udp-small-servers
+ service pad
+```;
+pattern = ```
+username  privilege 10 common-criteria-policy PASSWORD_POLICY password {password1: string} 
+aaa authentication login default group tacacs+ local
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ min-length 15
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ upper-case 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+lower-case 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ numeric-count 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ special-case 1
+```;
+pattern = ```
+aaa new-model
+aaa common-criteria policy PASSWORD_POLICY
+ char-changes 8
+```;
+pattern = ```
+service password-encryption
+Enable secret 5 
+```;
+pattern = ```
+ip http secure-server
+ip http timeout-policy idle 600 life  requests 
+line con 0
+ exec-timeout 10 0
+line vty 0 1
+ exec-timeout 10 0
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+logging buffered  informational
+```;
+pattern = ```
+logging trap critical
+```;
+pattern = ```
+ntp server {ip1: ipv4Address}
+ntp server y.y.y.y
+```;
+pattern = ```
+snmp-server group V3GROUP v3 auth read V3READ write V3WRITE 
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: None
+Group-name: V3GROUP
+```;
+pattern = ```
+snmp-server group V3GROUP v3 priv read V3READ write V3WRITE
+snmp-server view V3READ iso included
+snmp-server view V3WRITE iso included
+snmp-server host {ip1: ipv4Address} version 3 auth V3USER
+```;
+show = ```
+User name: V3USER
+Engine ID: 800000090300C2042B540000
+storage-type: nonvolatile active
+Authentication Protocol: SHA
+Privacy Protocol: AES256
+Group-name: V3GROUP
+```;
+pattern = ```
+ntp authentication-key 1 md5 121B0A151012 7
+ntp authenticate
+ntp trusted-key 1
+ntp server {ip1: ipv4Address} key 1
+ntp server y.y.y.y key 1
+```;
+pattern = ```
+ip ssh version 2
+ip ssh server algorithm mac hmac-sha2-512 hmac-sha2-256
+```;
+pattern = ```
+ip ssh version 2
+ip ssh server algorithm encryption aes256-ctr aes192-ctr aes128-ctr 
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+pattern = ```
+login on-failure log
+login on-success log
+```;
+archive = ```
+archive
+ log config
+ logging enable
+```; 
+line_con = ```
+line con 0
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+```; 
+line_vty = ```
+line vty 0 1
+ exec-timeout 10 0
+ login authentication LOGIN_AUTHENTICATION
+```; 
+pattern = ```
+aaa new-model
+aaa authentication login LOGIN_AUTHENTICATION group radius local
+ip http authentication aaa login-authentication LOGIN_AUTHENTICATION
+ip http secure-server
+radius-server host {ip1: ipv4Address} auth-port 1645 acct-port 1646 key 
+```;
+event_manager = ```
+event manager applet BACKUP_CONFIG
+ event syslog pattern "%SYS-5-CONFIG_I"
+ action 1 info type switchname
+ action 2 cli command "enable"
+ action 3 cli command "copy run tftp" pattern "remote host"
+ action 4 cli command "x.x.x.x" pattern "filename"
+ action 5 cli command "$_info_switchname-config"
+ action 6 syslog priority informational msg "Configuration backup was executed"
+```; 
+pattern = ```
+crypto pki trustpoint CA_X
+```;
+pattern = ```
+logging {ip1: ipv4Address}
+```;
+show = ```
+www.cisco.com/c/en/us/support/ios-nx-os-software
+```;
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SERVER_TRAFFIC in 
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_SQL_VLAN 
+ permit tcp any any eq 1433 1434 4022 
+ permit icmp any any 
+ deny ip any any 
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PRINTER_VLAN out 
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SQL_VLAN out 
+```; 
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5 
+ ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN 
+```; 
+interface_2 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip ospf authentication message-digest 
+ ip ospf message-digest-key 1 md5  
+```; 
+interface_3 = ```
+ no switchport 
+ ip rip authentication mode md5 
+ ip rip authentication key-chain RIP_KEY_CHAIN 
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN 
+ key 1 
+ key-string {key1: string}
+ send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018 
+ accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018 
+ cryptographic-algorithm hmac-sha-256 
+ key 2 
+ key-string {key2: string}
+ send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018 
+ accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018 
+ cryptographic-algorithm hmac-sha-256 
+```; 
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip ospf authentication key-chain OSPF_KEY_CHAIN 
+```; 
+interface_1 = ```
+ no switchport 
+ shutdown 
+```; 
+disable = ```
+ boot network
+ service config
+ cns config initial
+ cns exec
+ cns image
+ cns trusted-server config {ip1: ipv4Address}
+ cns trusted-server image {ip3: ipv4Address}
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT 
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL 
+ permit icmp any any 
+ permit ospf host {ip7: ipv4Address} host {ip8: ipv4Address} 
+ deny ip any host {ip9: ipv4Address} log-input 
+ deny ip any any log-input 
+```; 
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in 
+```; 
+interface_2 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip access-group INTERNAL_ACL in 
+```; 
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL 
+ deny icmp any host {ip5: ipv4Address} fragments 
+ permit icmp any any 
+```; 
+disable = ```
+ ip gratuitous-arps
+```;
+disable = ```
+interface {name1:string}
+ ip directed-broadcast
+```;
+ip_access_list = ```
+ip access-list ext ICMP_T3C1C13 
+ permit icmp any any host-unreachable 
+ permit icmp any any administratively-prohibited 
+```; 
+pattern = ```
+ip icmp rate-limit unreachable df 100 
+ip icmp rate-limit unreachable 100000 
+route-map LOCAL_POLICY 
+ ip address {ip: ipv4Address}
+set interface Null0 
+ip local policy route-map LOCAL_POLICY 
+```;
+disable = ```
+interface {name1:string}
+ ip unreachables
+```;
+disable = ```
+interface {name1:string}
+ ip mask-reply
+```;
+disable = ```
+interface {name1:string}
+ ip redirects
+```;
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER 
+ permit tcp any any established 
+ permit tcp any host {ip1: ipv4Address} eq www 
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo 
+ permit icmp any any echo-reply 
+ deny ip any any log 
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER 
+ permit tcp any any established 
+ permit tcp any host {ip1: ipv4Address} eq www 
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo 
+ permit icmp any any echo-reply 
+ deny ip any any log-input 
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER 
+ permit tcp any any established 
+ permit tcp any host {ip1: ipv4Address} eq www 
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo 
+ permit icmp any any echo-reply 
+ deny ip any any log-input 
+```; 
+pattern = ```
+line aux 0 
+transport input none
+```;
+disable = ```
+ exec
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in 
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL 
+ permit tcp any any established 
+ permit icmp host {ip1: ipv4Address} host {ip2: ipv4Address} echo 
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo-reply 
+ deny ip any any log-input 
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in 
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER 
+ permit tcp any any established 
+ permit icmp host {ip1: ipv4Address} host {ip2: ipv4Address} echo 
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo-reply 
+ permit tcp any host {ip5: ipv4Address} eq www 
+ deny ip any any log-input 
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER 
+ permit tcp any any established 
+ permit udp host {ip1: ipv4Address} host {ip2: ipv4Address} eq ntp 
+ deny ip any any log-input 
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER 
+ deny ip {ip1: ipv4Address} {ip2: ipv4Address} any log-input 
+ deny ip {ip3: ipv4Address} {ip4: ipv4Address} any log-input 
+ deny ip {ip5: ipv4Address} {ip6: ipv4Address} any log-input 
+ deny ip {ip7: ipv4Address} {ip8: ipv4Address} any log-input 
+ deny ip {ip9: ipv4Address} {ip10: ipv4Address} any log-input 
+ deny ip {ip11: ipv4Address} {ip12: ipv4Address} any log-input 
+ deny ip {ip13: ipv4Address} {ip14: ipv4Address} any log-input 
+ deny ip {ip15: ipv4Address} {ip16: ipv4Address} any log-input 
+ deny ip {ip17: ipv4Address} {ip18: ipv4Address} any log-input 
+ deny ip {ip19: ipv4Address} {ip20: ipv4Address} any log-input 
+ deny ip {ip21: ipv4Address} {ip22: ipv4Address} any log-input 
+ deny ip {ip23: ipv4Address} {ip24: ipv4Address} any log-input 
+ deny ip {ip25: ipv4Address} {ip26: ipv4Address} any log-input 
+ deny ip {ip27: ipv4Address} {ip28: ipv4Address} any log-input
+ permit tcp any any established 
+ permit icmp host {ip29: ipv4Address} host {ip30: ipv4Address} echo 
+ permit icmp host {ip31: ipv4Address} host {ip32: ipv4Address} echo-reply 
+ deny ip any any log-input 
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in 
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND 
+ permit tcp any any established 
+ permit icmp host {ip1: ipv4Address} host {ip2: ipv4Address} echo 
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo-reply 
+ deny ip any any log-input 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in 
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in 
+```; 
+disable = ```
+interface {name1:string}
+ lldp transmit
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+cdp run 
+cdp enable 
+```;
+disable = ```
+interface {name1:string}
+ ip proxy-arp
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_OUTBOUND out 
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_OUTBOUND 
+ deny tcp any any eq tacacs log-input 
+ deny tcp any any eq 22 log-input 
+ deny udp any any eq snmp log-input 
+ deny udp any any eq snmptrap log-input 
+ deny udp any any eq syslog log-input 
+ permit tcp any any eq www log-input 
+ deny ip any any log-input 
+```; 
+interface_1 = ```
+ no switchport 
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group INGRESS_MANAGEMENT_ACL in 
+ ip access-group EGRESS_MANAGEMENT_ACL in 
+```; 
+pattern = ```
+ip access-list extended EGRESS_MANAGEMENT_ACL 
+ deny ip any any log-input 
+```;
+pattern = ```
+mpls label protocol ldp 
+```;
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+```; 
+ip_access_list = ```
+ip access-list extended BLOCK_TO_CORE
+ deny ip any {ip1: ipv4Address} {ip2: ipv4Address} log-input
+ permit ip any any
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+ ip verify unicast source reachable-via any
+```; 
+class_C2_VOICE = ```
+class C2_VOICE
+ priority percent 10
+ class VOICE
+ priority percent 15
+ class VIDEO
+ bandwidth percent 25
+```; 
+class_CONTROL_PLANE = ```
+class CONTROL_PLANE
+ priority percent 10
+ class PREFERRED_DATA
+ bandwidth percent 25
+ class class-default
+ bandwidth percent 15
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all PREFERRED_DATA
+ match ip dscp af33
+policy-map QOS_POLICY
+```;
+policy_map_QOS_POLICY = ```
+policy-map QOS_POLICY
+ class CONTROL_PLANE
+ priority percent 10
+ class C2_VOICE
+ priority percent 10
+ class VOICE
+ priority percent 15
+ class VIDEO
+ bandwidth percent 25
+ class PREFERRED_DATA
+ bandwidth percent 25
+ class class-default
+ bandwidth percent 15
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all C2_VOICE
+ match ip dscp 47
+```;
+pattern = ```
+class-map match-all SCAVENGER 
+match ip dscp cs1 
+policy-map QOS_POLICY 
+class SCAVENGER 
+bandwidth percent 5 
+class class-default 
+bandwidth percent 10 
+```;
+disable = ```
+ class class-default
+```;
+disable = ```
+interface {name1:string}
+ ip pim sparse-mode
+```;
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip pim neighbor-filter PIM_NEIGHBORS 
+ ip pim sparse-mode 
+```; 
+pattern = ```
+ip access-list standard PIM_NEIGHBORS 
+ permit {ip1: ipv4Address} 
+```;
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode 
+ ip multicast boundary MULTICAST_SCOPE 
+```; 
+ip_access_list = ```
+ip access-list standard MULTICAST_SCOPE 
+ deny {ip1: ipv4Address} {ip2: ipv4Address} 
+ permit any 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode 
+ ip igmp access-group IGMP_JOIN_FILTER 
+ ip igmp version 3 
+```; 
+ip_access_list = ```
+ip access-list standard IGMP_JOIN_FILTER 
+ deny {ip1: ipv4Address} {ip2: ipv4Address} 
+ permit any 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode 
+ ip igmp access-group IGMP_JOIN_FILTER 
+ ip igmp version 3 
+```; 
+ip_access_list = ```
+ip access-list extended IGMP_JOIN_FILTER 
+ deny ip any {ip1: ipv4Address} {ip2: ipv4Address} 
+ permit ip {ip3: ipv4Address} {ip4: ipv4Address} any 
+ deny ip any any 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+ip igmp limit  
+```;
+pattern = ```
+ip pim rp-address {ip1: ipv4Address} 
+ip pim spt-threshold infinity 
+```;
+key_chain = ```
+key chain EIGRP_KEY 
+ key 1 
+ key-string {key1: string}
+```; 
+interface_1 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5 
+ ip authentication key-chain eigrp 1 EIGRP_KEY 
+```; 
+interface_2 = ```
+ no switchport 
+ ip address {ip: ipv4Address}
+ ip ospf authentication-key  
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN 
+ key 1 
+ key-string {key1: string}
+ send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018 
+ accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018 
+ key 2 
+ key-string {key2: string}
+ send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018 
+ accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018 
+```; 
+disable = ```
+ call-home
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip verify unicast source reachable-via rx 
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in 
+```; 
+ip_access_list = ```
+ip access-list extended EGRESS_FILTER 
+ permit udp {ip1: ipv4Address} {ip2: ipv4Address} any eq domain 
+ permit tcp {ip3: ipv4Address} {ip4: ipv4Address} any eq ftp 
+ permit tcp {ip5: ipv4Address} {ip6: ipv4Address} any eq ftp-data 
+ permit tcp {ip7: ipv4Address} {ip8: ipv4Address} any eq www 
+ permit icmp {ip9: ipv4Address} {ip10: ipv4Address} any 
+ permit icmp {ip11: ipv4Address} {ip12: ipv4Address} any echo 
+ deny ip any any 
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL 
+ permit tcp any any established 
+ deny ip any any option any-options 
+ deny ip any any log-input 
+```; 
+pattern = ```
+ip options drop
+ 
+ip options ignore
+```;
+pattern = ```
+IPv6 Example: ipv6 cef 
+```;
+pattern = ```
+ipv6 hop-limit 128
+```;
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 nd ra suppress
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny ipv6 any any log undetermined-transport
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ permit ipv6 any host 2001:DB8::1:1:1234 routing-type 2
+ deny ipv6 any any log routing
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny hbh any any dest-option-type 4 log
+ deny hbh any any dest-option-type 195 log
+ deny hbh any any dest-option-type home-address log 
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 5 log
+ deny 60 any any dest-option-type 194 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 138 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 195 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 2
+ deny any any dest-option-type 3
+ deny any any dest-option-type 6
+ deny any any dest-option-type 9
+ deny any any dest-option-type 10
+ deny any any dest-option-type 11
+ deny any any dest-option-type 12
+ deny any any dest-option-type 13
+ deny any any dest-option-type 14
+ deny any any dest-option-type 16
+ deny any any dest-option-type 34
+ deny any any dest-option-type 36
+ deny any any dest-option-type 37
+ deny any any dest-option-type 39
+ deny any any dest-option-type 47
+ deny any any dest-option-type 49
+ deny any any dest-option-type 255
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SERVER_TRAFFIC in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_SERVER_TRAFFIC
+ permit tcp any {ip1: ipv4Address} {ip2: ipv4Address} eq lpd 631 9100
+ permit tcp any {ip3: ipv4Address} {ip4: ipv4Address} eq 1433 1434 4022
+ permit icmp any any
+ permit ospf any any
+ deny   ip any any
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip router isis
+ isis authentication mode md5
+ isis authentication key-chain ISIS_KEY_CHAIN
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 
+```; 
+interface_4 = ```
+ ip rip authentication mode md5
+ ip rip authentication key-chain RIP_KEY_CHAIN
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN
+ key 1
+   key-string {key1: string}
+   send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+   accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+   cryptographic-algorithm hmac-sha-256
+ key 2
+   key-string {key2: string}
+   send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+   accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+   cryptographic-algorithm hmac-sha-256
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip ospf authentication key-chain OSPF_KEY_CHAIN
+```; 
+interface_1 = ```
+ shutdown
+```; 
+disable = ```
+ boot network
+ service config
+ cns config initial
+ cns exec
+ cns image
+ cns trusted-server config {ip1: ipv4Address}
+ cns trusted-server image {ip3: ipv4Address}
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL
+ permit icmp any any
+ permit ospf host {ip11: ipv4Address} host {ip12: ipv4Address}
+ deny   ip any host {ip13: ipv4Address} log-input
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip access-group INTERNAL_ACL in
+   
+```; 
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL
+ deny icmp any host {ip9: ipv4Address} fragments
+ permit icmp any any
+```; 
+disable = ```
+ ip gratuitous-arps
+```;
+disable = ```
+interface {name1:string}
+ ip directed-broadcast
+```;
+ip_access_list = ```
+ip access-list ext ICMP_T3C1C13
+ permit icmp any any host-unreachable
+ permit icmp any any administratively-prohibited
+```; 
+pattern = ```
+ip icmp rate-limit unreachable df 100
+ip icmp rate-limit unreachable 100000
+route-map LOCAL_POLICY
+ ip address {ip: ipv4Address}
+set interface Null0
+ip local policy route-map LOCAL_POLICY
+```;
+disable = ```
+interface {name1:string}
+ ip unreachables
+```;
+disable = ```
+interface {name1:string}
+ ip mask-reply
+```;
+disable = ```
+interface {name1:string}
+ ip redirects
+```;
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny   ip any any log
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny   ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny   ip any any log-input
+```; 
+pattern = ```
+line aux 0
+transport input none
+```;
+disable = ```
+ exec
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} host {ip2: ipv4Address} eq bgp
+ permit tcp host {ip3: ipv4Address} eq bgp host {ip4: ipv4Address}
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ permit tcp any host {ip9: ipv4Address} eq www
+ deny   ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ permit tcp any any established
+ permit udp host {ip1: ipv4Address} host {ip2: ipv4Address} eq ntp
+ deny   ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ deny   ip {ip1: ipv4Address} {ip2: ipv4Address} any log-input
+ deny   ip {ip3: ipv4Address} {ip4: ipv4Address} any log-input
+ deny   ip {ip5: ipv4Address} {ip6: ipv4Address} any log-input
+ deny   ip {ip7: ipv4Address} {ip8: ipv4Address} any log-input
+ deny   ip {ip9: ipv4Address} {ip10: ipv4Address} any log-input
+ deny   ip {ip11: ipv4Address} {ip12: ipv4Address} any log-input
+ deny   ip {ip13: ipv4Address} {ip14: ipv4Address} any log-input
+ deny   ip {ip15: ipv4Address} {ip16: ipv4Address} any log-input
+ deny   ip {ip17: ipv4Address} {ip18: ipv4Address} any log-input
+ deny   ip {ip19: ipv4Address} {ip20: ipv4Address} any log-input
+ deny   ip {ip21: ipv4Address} {ip22: ipv4Address} any log-input
+ deny   ip {ip23: ipv4Address} {ip24: ipv4Address} any log-input
+ deny   ip {ip25: ipv4Address} {ip26: ipv4Address} any log-input
+ deny   ip {ip27: ipv4Address} {ip28: ipv4Address} any log-input
+ permit tcp any any established
+ permit tcp host {ip29: ipv4Address} host {ip30: ipv4Address} eq bgp
+ permit tcp host {ip31: ipv4Address} eq bgp host {ip32: ipv4Address}
+ permit icmp host {ip33: ipv4Address} host {ip34: ipv4Address} echo
+ permit icmp host {ip35: ipv4Address} host {ip36: ipv4Address} echo-reply
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_ISP in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_ISP
+ permit tcp any any established
+ permit icmp host {ip1: ipv4Address} host {ip2: ipv4Address} echo
+ permit icmp host {ip3: ipv4Address} host {ip4: ipv4Address} echo-reply
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit tcp any host {ip7: ipv4Address} eq www
+ permit 50 any host {ip9: ipv4Address}
+ permit 51 any host {ip11: ipv4Address}
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ no auto-summary
+```; 
+router_ospf = ```
+router ospf 1
+ log-adjacency-changes
+ redistribute static subnets
+ network {ip1: ipv4Address} {ip2: ipv4Address} area 0
+```; 
+router_eigrp = ```
+router eigrp 1
+ network {ip3: ipv4Address} {ip4: ipv4Address}
+ redistribute static
+```; 
+router_rip = ```
+router rip
+ version 2
+ redistribute static
+ network {ip5: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor {ip7: ipv4Address} remote-as 
+ no auto-summary
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in
+```; 
+disable = ```
+interface {name1:string}
+ lldp transmit
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+cdp run
+cdp enable
+```;
+disable = ```
+interface {name1:string}
+ ip proxy-arp
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_OUTBOUND out
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_OUTBOUND
+ deny   tcp any any eq tacacs log-input
+ deny   tcp any any eq 22 log-input
+ deny   udp any any eq snmp log-input
+ deny   udp any any eq snmptrap log-input
+ deny   udp any any eq syslog log-input
+ permit tcp any any eq www log-input
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ crypto map IPSEC_MGMT_MAP
+```; 
+crypto_isakmp = ```
+crypto isakmp policy 10
+ authentication pre-share
+ hash sha256
+ crypto isakmp key  address {ip1: ipv4Address}
+```; 
+crypto_map = ```
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer {ip3: ipv4Address}
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+```; 
+pattern = ```
+crypto ipsec transform-set TRANS_SET ah-sha256-hmac esp-aes 
+ip access-list extended MGMT_TRAFFIC_ACL
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group MGMT_TRAFFIC_ACL out
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ crypto map IPSEC_MGMT_MAP
+```; 
+crypto_map = ```
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer {ip1: ipv4Address}
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+```; 
+pattern = ```
+ip access-list extended MGMT_TRAFFIC_ACL
+```;
+router_ospf = ```
+router ospf 2 vrf PROD
+ log-adjacency-changes
+ network {ip3: ipv4Address} {ip4: ipv4Address} area 0
+```; 
+pattern = ```
+ip vrf MGMT
+```;
+disable = ```
+ route-target import 8:8
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group TRAFFIC_FROM_NOC in
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group TRAFFIC_TO_NOC in
+```; 
+ip_access_list = ```
+ip access-list extended TRAFFIC_TO_NOC
+ deny   ip any host {ip5: ipv4Address} log-input
+ deny   ip any host {ip7: ipv4Address} log-input
+ deny   ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group INGRESS_MANAGEMENT_ACL in
+ ip access-group EGRESS_MANAGEMENT_ACL out
+```; 
+pattern = ```
+ip access-list extended EGRESS_MANAGEMENT_ACL
+ deny   ip any any log-input
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ crypto map IPSEC_MGMT_MAP
+```; 
+crypto_isakmp = ```
+crypto isakmp policy 10
+ authentication pre-share
+ hash sha256
+ crypto isakmp key  address {ip1: ipv4Address}
+```; 
+crypto_map = ```
+crypto map IPSEC_MGMT_MAP 10 ipsec-isakmp
+ set peer {ip3: ipv4Address}
+ set transform-set TRANS_SET
+ match address MGMT_TRAFFIC_ACL
+```; 
+pattern = ```
+crypto ipsec transform-set TRANS_SET ah-sha256-hmac esp-aes 
+ip access-list extended MGMT_TRAFFIC_ACL
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip9: ipv4Address} remote-as 
+ neighbor {ip11: ipv4Address} route-map FILTER_PREFIX_MAP
+ neighbor {ip13: ipv4Address} remote-as 
+ neighbor {ip15: ipv4Address} route-map FILTER_PREFIX_MAP
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 15 deny {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 20 deny {subnet7: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 25 deny {subnet9: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 30 deny {subnet11: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 35 deny {subnet13: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 40 deny {subnet15: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 45 deny {subnet17: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 50 deny {subnet19: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 55 deny {subnet21: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 60 deny {subnet23: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 65 deny {subnet25: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 70 deny {subnet27: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet29: ipv4Subnet} ge 8
+route-map FILTER_PREFIX_MAP permit 10
+ ip address {ip: ipv4Address}
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list PREFIX_FILTER in
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} prefix-list PREFIX_FILTER in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 74 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 64514
+ neighbor {ip3: ipv4Address} prefix-list FILTER_PREFIXES_CUST1 in
+ neighbor {ip5: ipv4Address} remote-as 64516
+ neighbor {ip7: ipv4Address} prefix-list FILTER_PREFIXES_CUST2 in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER_CUST1 seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST1 seq 10 deny {subnet3: ipv4Subnet} ge 8
+ip prefix-list PREFIX_FILTER_CUST2 seq 5 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST2 seq 10 deny {subnet7: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 64512
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 64514
+ neighbor {ip3: ipv4Address} prefix-list CE_PREFIX_ADVERTISEMENTS out
+ neighbor {ip5: ipv4Address} remote-as 64516
+ neighbor {ip7: ipv4Address} prefix-list CE_PREFIX_ADVERTISEMENTS out
+```; 
+pattern = ```
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 10 permit {subnet3: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 15 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 20 permit {subnet7: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 80 deny {subnet9: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list FILTER _CORE_PREFIXES out
+```; 
+pattern = ```
+ip prefix-list FILTER_CORE_PREFIXES seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 15 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ no bgp enforce-first-as
+```; 
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} filter-list 10 in
+```; 
+pattern = ```
+ip as-path access-list 10 permit ^yy$
+ip as-path access-list 10 deny .*
+```;
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} maximum-prefix 
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} maximum-prefix 
+```; 
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list FILTER_PREFIX_LENGTH in
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} prefix-list FILTER_PREFIX_LENGTH in
+```; 
+pattern = ```
+ip prefix-list FILTER_PREFIX_LENGTH seq 5 permit {subnet1: ipv4Subnet} ge 8 le 24
+ip prefix-list FILTER_PREFIX_LENGTH seq 10 deny {subnet3: ipv4Subnet} le 32
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ no bgp enforce-first-as
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} update-source Loopback0
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+mpls ldp router-id Loopback0
+```;
+router_isis = ```
+router isis
+ mpls ldp sync
+ net 49.0001.1234.1600.5531.00
+```; 
+pattern = ```
+router ospf 1
+ mpls ldp sync
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ mpls traffic-eng tunnels
+ mpls ip
+```; 
+pattern = ```
+mpls traffic-eng tunnels
+ip rsvp signalling rate-limit period 30 burst 9 maxsize 2100 limit 50
+```;
+disable = ```
+ mpls ip propagate-ttl
+```;
+interface_1 = ```
+ description {desc: string}
+ ip vrf forwarding COI1
+ ip address {ip: ipv4Address}
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip vrf forwarding COI2
+ ip address {ip: ipv4Address}
+```; 
+ip_vrf = ```
+ip vrf CUST1
+ rd 13:13
+ route-target export 13:13
+ route-target import 13:13
+```; 
+pattern = ```
+ip vrf CUST1
+ rd 13:13
+```;
+pattern = ```
+mpls label protocol ldp
+```;
+interface_1 = ```
+ xconnect {ip1: ipv4Address} 55 encapsulation mpls
+```; 
+l2_vfi = ```
+l2 vfi VPLS_A manual 
+ vpn id 110
+ bridge-domain 100
+ neighbor {ip1: ipv4Address} encapsulation mpls
+ neighbor {ip3: ipv4Address} encapsulation mpls
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ service instance 10 ethernet
+  encapsulation untagged
+  bridge-domain 100
+```; 
+l2_vfi = ```
+l2 vfi VPLS_A manual 
+ vpn id 110
+ bridge-domain 100
+ neighbor {ip1: ipv4Address} encapsulation mpls no-split-horizon
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ service instance 10 ethernet
+  encapsulation untagged
+  bridge-domain 100
+  storm-control broadcast cir 12000000 
+```; 
+pattern = ```
+bridge-domain 100 
+ no ip igmp snooping
+```;
+pattern = ```
+bridge-domain 100 
+ mac limit maximum addresses 
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+```; 
+ip_access_list = ```
+ip access-list extended BLOCK_TO_CORE
+ deny   ip any {ip1: ipv4Address} {ip2: ipv4Address} log-input
+ permit ip any any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+ ip verify unicast source reachable-via any
+```; 
+class_C2_VOICE = ```
+class C2_VOICE
+    priority percent 10
+ class VOICE
+    priority percent 15
+ class VIDEO
+    bandwidth percent 25
+```; 
+class_CONTROL_PLANE = ```
+class CONTROL_PLANE
+    priority percent 10
+ class PREFERRED_DATA
+    bandwidth percent 25
+ class class-default
+    bandwidth percent 15
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all PREFERRED_DATA
+ match ip dscp af33
+policy-map QOS_POLICY
+```;
+policy_map_QOS_POLICY = ```
+policy-map QOS_POLICY
+ class CONTROL_PLANE
+    priority percent 10
+ class C2_VOICE
+    priority percent 10
+ class VOICE
+    priority percent 15
+ class VIDEO
+    bandwidth percent 25
+ class PREFERRED_DATA
+    bandwidth percent 25
+ class class-default
+    bandwidth percent 15
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all C2_VOICE
+ match ip dscp 47
+```;
+pattern = ```
+class-map match-all SCAVENGER
+match ip dscp cs1
+policy-map QOS_POLICY
+class SCAVENGER
+bandwidth percent 5
+class class-default
+bandwidth percent 10
+```;
+disable = ```
+ class class-default
+```;
+disable = ```
+interface {name1:string}
+ ip pim sparse-mode
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim neighbor-filter PIM_NEIGHBORS
+ ip pim sparse-mode
+```; 
+pattern = ```
+ip access-list standard PIM_NEIGHBORS
+ permit {ip1: ipv4Address}
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip multicast boundary MULTICAST_SCOPE
+```; 
+ip_access_list = ```
+ip access-list standard MULTICAST_SCOPE
+ deny   {ip1: ipv4Address} {ip2: ipv4Address}
+ permit any
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip11: ipv4Address} host {ip12: ipv4Address} eq 639
+ deny   tcp any host {ip13: ipv4Address} eq 639 log
+ permit tcp host {ip15: ipv4Address} host {ip16: ipv4Address} eq bgp
+ permit tcp host {ip17: ipv4Address} eq bgp host {ip18: ipv4Address}
+ permit pim host {ip19: ipv4Address} pim host {ip20: ipv4Address}
+ deny ip any any log
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip pim sparse-mode
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-register list PIM_REGISTER_FILTER
+ip pim rp-address {ip9: ipv4Address}
+ip pim register-rate-limit 
+```;
+ip_access_list = ```
+ip access-list extended PIM_REGISTER_FILTER
+ deny   ip any {ip3: ipv4Address} {ip4: ipv4Address}
+ permit ip host {ip5: ipv4Address} any
+ permit ip host {ip7: ipv4Address} any
+ deny   ip any any
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-register list PIM_REGISTER_FILTER
+```;
+ip_access_list = ```
+ip access-list standard FILTER_PIM_JOINS
+ deny   {ip5: ipv4Address} {ip6: ipv4Address}
+ permit any
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-rp {ip3: ipv4Address} FILTER_PIM_JOINS
+```;
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim register-rate-limit 
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip igmp access-group IGMP_JOIN_FILTER
+ ip igmp version 3
+```; 
+ip_access_list = ```
+ip access-list standard IGMP_JOIN_FILTER
+ deny   {ip1: ipv4Address} {ip2: ipv4Address}
+ permit any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip igmp access-group IGMP_JOIN_FILTER
+ ip igmp version 3
+```; 
+ip_access_list = ```
+ip access-list extended IGMP_JOIN_FILTER
+ deny   ip any {ip1: ipv4Address} {ip2: ipv4Address}
+ permit ip {ip3: ipv4Address} {ip4: ipv4Address} any
+ deny   ip any any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip igmp limit 
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim spt-threshold infinity
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip pim sparse-mode
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} host {ip2: ipv4Address} eq 639
+ deny   tcp any host {ip3: ipv4Address} eq 639 log
+ permit tcp host {ip5: ipv4Address} host {ip6: ipv4Address} eq bgp
+ permit tcp host {ip7: ipv4Address} eq bgp host {ip8: ipv4Address}
+ permit pim host {ip9: ipv4Address} pim host {ip10: ipv4Address}
+ deny ip any any log
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 8
+```;
+ip_access_list = ```
+ip access-list extended INBOUND_MSDP_SA_FILTER
+ deny   ip any host {ip5: ipv4Address}
+ deny   ip any host {ip7: ipv4Address}
+ deny   ip any host {ip9: ipv4Address}
+ deny   ip any host {ip11: ipv4Address}
+ deny   ip any host {ip13: ipv4Address}
+ deny   ip any host {ip15: ipv4Address}
+ deny   ip any host {ip17: ipv4Address}
+ deny   ip any host {ip19: ipv4Address}
+ deny   ip any {ip21: ipv4Address} {ip22: ipv4Address}
+ deny   ip any {ip23: ipv4Address} {ip24: ipv4Address}
+ deny   ip {ip25: ipv4Address} {ip26: ipv4Address} any
+ deny   ip {ip27: ipv4Address} {ip28: ipv4Address} any
+ deny   ip {ip29: ipv4Address} {ip30: ipv4Address} any
+ deny   ip {ip31: ipv4Address} {ip32: ipv4Address} any
+ permit ip any any
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 2
+ip msdp sa-filter in {ip3: ipv4Address} list INBOUND_MSDP_SA_FILTER
+```;
+ip_access_list = ```
+ip access-list extended OUTBOUND_MSDP_SA_FILTER
+ deny   ip {ip5: ipv4Address} {ip6: ipv4Address} any
+ permit ip any any
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 8
+ip msdp sa-filter out {ip3: ipv4Address} list OUTBOUND_MSDP_SA_FILTER
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 
+ip msdp sa-filter in {ip3: ipv4Address} list MSDP_SA_FILTER
+ip msdp sa-limit X.1.28.2 
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Loopback12 remote-as 
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+```; 
+key_chain = ```
+key chain EIGRP_KEY
+ key 1
+  key-string {key1: string}
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip router isis
+ isis password {password2: string} 
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip ospf authentication-key 
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN
+ key 1
+   key-string {key1: string}
+   send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+   accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+ key 2
+   key-string {key2: string}
+   send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+   accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+```; 
+disable = ```
+ service call-home
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip verify unicast source reachable-via rx
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in
+```; 
+ip_access_list = ```
+ip access-list extended EGRESS_FILTER
+ permit udp {ip1: ipv4Address} {ip2: ipv4Address} any eq domain
+ permit tcp {ip3: ipv4Address} {ip4: ipv4Address} any eq ftp
+ permit tcp {ip5: ipv4Address} {ip6: ipv4Address} any eq ftp-data
+ permit tcp {ip7: ipv4Address} {ip8: ipv4Address} any eq www
+ permit icmp {ip9: ipv4Address} {ip10: ipv4Address} any
+ permit icmp {ip11: ipv4Address} {ip12: ipv4Address} any echo
+ deny   ip any any
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL
+ permit tcp any any established
+ deny   ip any any option any-options
+ deny   ip any any log-input
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} ttl-security hops 1
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} ttl-security hops 1
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} remote-as 
+```; 
+pattern = ```
+ip options drop
+ 
+ip options ignore
+```;
+pattern = ```
+IPv6 Example: ipv6 cef
+```;
+pattern = ```
+ipv6 hop-limit 128
+```;
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 nd ra suppress
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny ipv6 any any log undetermined-transport
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ permit ipv6 any host 2001:DB8::1:1:1234 routing-type 2
+ deny ipv6 any any log routing
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny hbh any any dest-option-type 4 log
+ deny hbh any any dest-option-type 195 log
+ deny hbh any any dest-option-type home-address log 
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 5 log
+ deny 60 any any dest-option-type 194 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 138 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 195 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 2
+ deny any any dest-option-type 3
+ deny any any dest-option-type 6
+ deny any any dest-option-type 9
+ deny any any dest-option-type 10
+ deny any any dest-option-type 11
+ deny any any dest-option-type 12
+ deny any any dest-option-type 13
+ deny any any dest-option-type 14
+ deny any any dest-option-type 16
+ deny any any dest-option-type 34
+ deny any any dest-option-type 36
+ deny any any dest-option-type 37
+ deny any any dest-option-type 39
+ deny any any dest-option-type 47
+ deny any any dest-option-type 49
+ deny any any dest-option-type 255
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SERVER_TRAFFIC in 
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_SQL_VLAN
+ permit tcp any any eq 1433 1434 4022
+ permit icmp any any
+ deny ip any any
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PRINTER_VLAN out
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SQL_VLAN out
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+```; 
+key_chain = ```
+key chain EIGRP_KEY
+ key 1
+ key-string {key1: string}
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY
+```; 
+interface_2 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip router isis
+ isis password {password2: string} 
+```; 
+interface_3 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip ospf authentication-key 
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN
+ key 1
+ key-string {key1: string}
+ send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+ accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+ key 2
+ key-string {key2: string}
+ send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+ accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY_CHAIN
+```; 
+interface_2 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip router isis
+ isis authentication mode md5
+ isis authentication key-chain ISIS_KEY_CHAIN
+```; 
+interface_3 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 
+```; 
+interface_4 = ```
+ no switchport
+ ip rip authentication mode md5
+ ip rip authentication key-chain RIP_KEY_CHAIN
+```; 
+key_chain = ```
+key chain OSPF_KEY_CHAIN
+ key 1
+ key-string {key1: string}
+ send-lifetime 00:00:00 Jan 1 2018 23:59:59 Mar 31 2018
+ accept-lifetime 00:00:00 Jan 1 2018 01:05:00 Apr 1 2018
+ cryptographic-algorithm hmac-sha-256
+ key 2
+ key-string {key2: string}
+ send-lifetime 00:00:00 Apr 1 2018 23:59:59 Jun 30 2018
+ accept-lifetime 23:55:00 Mar 31 2018 01:05:00 Jul 1 2018
+ cryptographic-algorithm hmac-sha-256
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip ospf authentication key-chain OSPF_KEY_CHAIN
+```; 
+interface_1 = ```
+ no switchport
+ shutdown
+```; 
+disable = ```
+ call-home
+```;
+disable = ```
+ boot network
+ service config
+ cns config initial
+ cns exec
+ cns image
+ cns trusted-server config {ip1: ipv4Address}
+ cns trusted-server image {ip3: ipv4Address}
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL
+ permit icmp any any
+ permit ospf host {ip11: ipv4Address} host {ip12: ipv4Address}
+ deny ip any host {ip13: ipv4Address} log-input
+ deny ip any any log-input
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in
+```; 
+interface_2 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group INTERNAL_ACL in
+```; 
+ip_access_list = ```
+ip access-list extended INTERNAL_ACL
+ deny icmp any host {ip9: ipv4Address} fragments
+ permit icmp any any
+```; 
+disable = ```
+ ip gratuitous-arps
+```;
+disable = ```
+interface {name1:string}
+ ip directed-broadcast
+```;
+ip_access_list = ```
+ip access-list ext ICMP_T3C1C13
+ permit icmp any any host-unreachable
+ permit icmp any any administratively-prohibited
+```; 
+pattern = ```
+ip icmp rate-limit unreachable df 100
+ip icmp rate-limit unreachable 100000
+route-map LOCAL_POLICY
+ ip address {ip: ipv4Address}
+set interface Null0
+ip local policy route-map LOCAL_POLICY
+```;
+disable = ```
+interface {name1:string}
+ ip unreachables
+```;
+disable = ```
+interface {name1:string}
+ ip mask-reply
+```;
+disable = ```
+interface {name1:string}
+ ip redirects
+```;
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny ip any any log
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended INGRESS_FILTER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit tcp any host {ip5: ipv4Address} eq www
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo
+ permit icmp any any echo-reply
+ deny ip any any log-input
+```; 
+pattern = ```
+line aux 0
+transport input none
+```;
+disable = ```
+ exec
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ deny ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} host {ip2: ipv4Address} eq bgp
+ permit tcp host {ip3: ipv4Address} eq bgp host {ip4: ipv4Address}
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ permit tcp any host {ip9: ipv4Address} eq www
+ deny ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ permit tcp any any established
+ permit udp host {ip1: ipv4Address} host {ip2: ipv4Address} eq ntp
+ deny ip any any log-input
+```; 
+ip_access_list = ```
+ip access-list extended FILTER_PERIMETER
+ deny ip {ip1: ipv4Address} {ip2: ipv4Address} any log-input
+ deny ip {ip3: ipv4Address} {ip4: ipv4Address} any log-input
+ deny ip {ip5: ipv4Address} {ip6: ipv4Address} any log-input
+ deny ip {ip7: ipv4Address} {ip8: ipv4Address} any log-input
+ deny ip {ip9: ipv4Address} {ip10: ipv4Address} any log-input
+ deny ip {ip11: ipv4Address} {ip12: ipv4Address} any log-input
+ deny ip {ip13: ipv4Address} {ip14: ipv4Address} any log-input
+ deny ip {ip15: ipv4Address} {ip16: ipv4Address} any log-input
+ deny ip {ip17: ipv4Address} {ip18: ipv4Address} any log-input
+ deny ip {ip19: ipv4Address} {ip20: ipv4Address} any log-input
+ deny ip {ip21: ipv4Address} {ip22: ipv4Address} any log-input
+ deny ip {ip23: ipv4Address} {ip24: ipv4Address} any log-input
+ deny ip {ip25: ipv4Address} {ip26: ipv4Address} any log-input
+ deny ip {ip27: ipv4Address} {ip28: ipv4Address} any log-input
+ permit tcp any any established
+ permit tcp host {ip29: ipv4Address} host {ip30: ipv4Address} eq bgp
+ permit tcp host {ip31: ipv4Address} eq bgp host {ip32: ipv4Address}
+ permit icmp host {ip33: ipv4Address} host {ip34: ipv4Address} echo
+ permit icmp host {ip35: ipv4Address} host {ip36: ipv4Address} echo-reply
+ deny ip any any log-input
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PERIMETER in
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip verify unicast source reachable-via rx
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in
+```; 
+ip_access_list = ```
+ip access-list extended EGRESS_FILTER
+ permit udp {ip1: ipv4Address} {ip2: ipv4Address} any eq domain
+ permit tcp {ip3: ipv4Address} {ip4: ipv4Address} any eq ftp
+ permit tcp {ip5: ipv4Address} {ip6: ipv4Address} any eq ftp-data
+ permit tcp {ip7: ipv4Address} {ip8: ipv4Address} any eq www
+ permit icmp {ip9: ipv4Address} {ip10: ipv4Address} any
+ permit icmp {ip11: ipv4Address} {ip12: ipv4Address} any echo
+ deny ip any any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} eq bgp host {ip2: ipv4Address}
+ permit tcp host {ip3: ipv4Address} host {ip4: ipv4Address} eq bgp
+ permit icmp host {ip5: ipv4Address} host {ip6: ipv4Address} echo
+ permit icmp host {ip7: ipv4Address} host {ip8: ipv4Address} echo-reply
+ deny ip any any log-input
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+```; 
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EGRESS_FILTER in
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL
+ permit tcp any any established
+ deny ip any any option any-options
+ deny ip any any log-input
+```; 
+disable = ```
+interface {name1:string}
+ lldp transmit
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+cdp run
+cdp enable
+```;
+disable = ```
+interface {name1:string}
+ ip proxy-arp
+```;
+interface_1 = ```
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_OUTBOUND out
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_OUTBOUND
+ deny tcp any any eq tacacs log-input
+ deny tcp any any eq 22 log-input
+ deny udp any any eq snmp log-input
+ deny udp any any eq snmptrap log-input
+ deny udp any any eq syslog log-input
+ permit tcp any any eq www log-input
+ deny ip any any log-input
+```; 
+interface_1 = ```
+ no switchport
+ description {desc: string}
+ ip address {ip: ipv4Address}
+ ip access-group INGRESS_MANAGEMENT_ACL in
+ ip access-group EGRESS_MANAGEMENT_ACL in
+```; 
+pattern = ```
+ip access-list extended EGRESS_MANAGEMENT_ACL
+ deny ip any any log-input
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} ttl-security hops 1
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} ttl-security hops 1
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} remote-as 
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip9: ipv4Address} remote-as 
+ neighbor {ip11: ipv4Address} route-map FILTER_PREFIX_MAP
+ neighbor {ip13: ipv4Address} remote-as 
+ neighbor {ip15: ipv4Address} route-map FILTER_PREFIX_MAP
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 15 deny {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 20 deny {subnet7: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 25 deny {subnet9: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 30 deny {subnet11: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 35 deny {subnet13: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 40 deny {subnet15: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 45 deny {subnet17: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 50 deny {subnet19: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 55 deny {subnet21: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 60 deny {subnet23: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 65 deny {subnet25: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 70 deny {subnet27: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet29: ipv4Subnet} ge 8
+route-map FILTER_PREFIX_MAP permit 10
+ ip address {ip: ipv4Address}
+```;
+bgp_log_neighbor_changes = ```
+bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list PREFIX_FILTER in
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} prefix-list PREFIX_FILTER in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 74 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet5: ipv4Subnet} ge 8
+ router bgp 
+```;
+disable = ```
+ synchronization
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 64514
+ neighbor {ip3: ipv4Address} prefix-list FILTER_PREFIXES_CUST1 in
+ neighbor {ip5: ipv4Address} remote-as 64516
+ neighbor {ip7: ipv4Address} prefix-list FILTER_PREFIXES_CUST2 in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER_CUST1 seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST1 seq 10 deny {subnet3: ipv4Subnet} ge 8
+ip prefix-list PREFIX_FILTER_CUST2 seq 5 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST2 seq 10 deny {subnet7: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 64512
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 64514
+ neighbor {ip3: ipv4Address} prefix-list CE_PREFIX_ADVERTISEMENTS out
+ neighbor {ip5: ipv4Address} remote-as 64516
+ neighbor {ip7: ipv4Address} prefix-list CE_PREFIX_ADVERTISEMENTS out
+```; 
+pattern = ```
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 10 permit {subnet3: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 15 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 20 permit {subnet7: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 80 deny {subnet9: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ bgp log-neighbor-changes
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list FILTER _CORE_PREFIXES out
+```; 
+pattern = ```
+ip prefix-list FILTER_CORE_PREFIXES seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 15 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ no synchronization
+ no bgp enforce-first-as
+```; 
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} filter-list 10 in
+```; 
+pattern = ```
+ip as-path access-list 10 permit ^yy$
+ip as-path access-list 10 deny .*
+```;
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} maximum-prefix 
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} maximum-prefix 
+```; 
+router_bgp = ```
+router bgp 
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} prefix-list FILTER_PREFIX_LENGTH in
+ neighbor {ip5: ipv4Address} remote-as 
+ neighbor {ip7: ipv4Address} prefix-list FILTER_PREFIX_LENGTH in
+```; 
+pattern = ```
+ip prefix-list FILTER_PREFIX_LENGTH seq 5 permit {subnet1: ipv4Subnet} ge 8 le 24
+ip prefix-list FILTER_PREFIX_LENGTH seq 10 deny {subnet3: ipv4Subnet} le 32
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+router_bgp = ```
+router bgp 
+ no synchronization
+ no bgp enforce-first-as
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor {ip1: ipv4Address} remote-as 
+ neighbor {ip3: ipv4Address} update-source Loopback0
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+mpls ldp router-id Loopback0
+```;
+router_isis = ```
+router isis
+ mpls ldp sync
+ net 49.0001.1234.1600.5531.00
+```; 
+pattern = ```
+router ospf 1
+ mpls ldp sync
+```;
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ mpls traffic-eng tunnels
+ mpls ip
+```; 
+pattern = ```
+mpls traffic-eng tunnels
+ip rsvp signalling rate-limit period 30 burst 9 maxsize 2100 limit 50
+```;
+disable = ```
+ mpls ip propagate-ttl
+```;
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip vrf forwarding COI1
+ ip address {ip: ipv4Address}
+```; 
+interface_2 = ```
+ description {desc: string}
+ ip vrf forwarding COI2
+ ip address {ip: ipv4Address}
+```; 
+disable = ```
+ switchport
+```;
+ip_vrf = ```
+ip vrf CUST1
+ rd 13:13
+ route-target export 13:13
+ route-target import 13:13
+```; 
+pattern = ```
+ip vrf CUST1
+ rd 13:13
+```;
+pattern = ```
+mpls label protocol ldp
+```;
+interface_1 = ```
+ xconnect {ip1: ipv4Address} 55 encapsulation mpls
+```; 
+l2_vfi = ```
+l2 vfi VPLS_A manual 
+ vpn id 110
+ bridge-domain 100
+ neighbor {ip1: ipv4Address} encapsulation mpls
+ neighbor {ip3: ipv4Address} encapsulation mpls
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ service instance 10 ethernet
+ encapsulation untagged
+ bridge-domain 100
+```; 
+l2_vfi = ```
+l2 vfi VPLS_A manual 
+ vpn id 110
+ bridge-domain 100
+ neighbor {ip1: ipv4Address} encapsulation mpls no-split-horizon
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ service instance 10 ethernet
+ encapsulation untagged
+ bridge-domain 100
+ storm-control broadcast cir 12000000 
+```; 
+pattern = ```
+bridge-domain 100 
+ no ip igmp snooping
+```;
+pattern = ```
+bridge-domain 100 
+ mac limit maximum addresses 
+```;
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+```; 
+ip_access_list = ```
+ip access-list extended BLOCK_TO_CORE
+ deny ip any {ip1: ipv4Address} {ip2: ipv4Address} log-input
+ permit ip any any
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group BLOCK_TO_CORE in
+ ip verify unicast source reachable-via any
+```; 
+pattern = ```
+ip options drop
+ 
+ip options ignore
+```;
+class_C2_VOICE = ```
+class C2_VOICE
+ priority percent 10
+ class VOICE
+ priority percent 15
+ class VIDEO
+ bandwidth percent 25
+```; 
+class_CONTROL_PLANE = ```
+class CONTROL_PLANE
+ priority percent 10
+ class PREFERRED_DATA
+ bandwidth percent 25
+ class class-default
+ bandwidth percent 15
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all PREFERRED_DATA
+ match ip dscp af33
+policy-map QOS_POLICY
+```;
+policy_map_QOS_POLICY = ```
+policy-map QOS_POLICY
+ class CONTROL_PLANE
+ priority percent 10
+ class C2_VOICE
+ priority percent 10
+ class VOICE
+ priority percent 15
+ class VIDEO
+ bandwidth percent 25
+ class PREFERRED_DATA
+ bandwidth percent 25
+ class class-default
+ bandwidth percent 15
+```; 
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all C2_VOICE
+ match ip dscp 47
+```;
+pattern = ```
+class-map match-all SCAVENGER
+match ip dscp cs1
+policy-map QOS_POLICY
+class SCAVENGER
+bandwidth percent 5
+class class-default
+bandwidth percent 10
+```;
+disable = ```
+ class class-default
+```;
+disable = ```
+interface {name1:string}
+ ip pim sparse-mode
+```;
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip pim neighbor-filter PIM_NEIGHBORS
+ ip pim sparse-mode
+```; 
+pattern = ```
+ip access-list standard PIM_NEIGHBORS
+ permit {ip1: ipv4Address}
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip multicast boundary MULTICAST_SCOPE
+```; 
+ip_access_list = ```
+ip access-list standard MULTICAST_SCOPE
+ deny {ip1: ipv4Address} {ip2: ipv4Address}
+ permit any
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND 
+ permit tcp any any established 
+ permit tcp host {ip11: ipv4Address} host {ip12: ipv4Address} eq 639 
+ deny tcp any host {ip13: ipv4Address} eq 639 log 
+ permit tcp host {ip15: ipv4Address} host {ip16: ipv4Address} eq bgp 
+ permit tcp host {ip17: ipv4Address} eq bgp host {ip18: ipv4Address} 
+ permit pim host {ip19: ipv4Address} pim host {ip20: ipv4Address} 
+ deny ip any any log 
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address} 
+ip pim accept-register list PIM_REGISTER_FILTER 
+ip pim rp-address {ip9: ipv4Address} 
+ip pim register-rate-limit  
+ip access-group EXTERNAL_ACL_INBOUND in 
+ip pim sparse-mode 
+```;
+ip_access_list = ```
+ip access-list extended PIM_REGISTER_FILTER
+ deny ip any {ip3: ipv4Address} {ip4: ipv4Address}
+ permit ip host {ip5: ipv4Address} any
+ permit ip host {ip7: ipv4Address} any
+ deny ip any any
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-register list PIM_REGISTER_FILTER
+```;
+ip_access_list = ```
+ip access-list standard FILTER_PIM_JOINS
+ deny {ip5: ipv4Address} {ip6: ipv4Address}
+ permit any
+```; 
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim accept-rp {ip3: ipv4Address} FILTER_PIM_JOINS
+```;
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim register-rate-limit 
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip igmp access-group IGMP_JOIN_FILTER
+ ip igmp version 3
+```; 
+ip_access_list = ```
+ip access-list standard IGMP_JOIN_FILTER
+ deny {ip1: ipv4Address} {ip2: ipv4Address}
+ permit any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+ ip pim sparse-mode
+ ip igmp access-group IGMP_JOIN_FILTER
+ ip igmp version 3
+```; 
+ip_access_list = ```
+ip access-list extended IGMP_JOIN_FILTER
+ deny ip any {ip1: ipv4Address} {ip2: ipv4Address}
+ permit ip {ip3: ipv4Address} {ip4: ipv4Address} any
+ deny ip any any
+```; 
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+ip igmp limit 
+```;
+pattern = ```
+ip pim rp-address {ip1: ipv4Address}
+ip pim spt-threshold infinity
+```;
+interface_1 = ```
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip pim sparse-mode
+```; 
+ip_access_list = ```
+ip access-list extended EXTERNAL_ACL_INBOUND
+ permit tcp any any established
+ permit tcp host {ip1: ipv4Address} host {ip2: ipv4Address} eq 639
+ deny tcp any host {ip3: ipv4Address} eq 639 log
+ permit tcp host {ip5: ipv4Address} host {ip6: ipv4Address} eq bgp
+ permit tcp host {ip7: ipv4Address} eq bgp host {ip8: ipv4Address}
+ permit pim host {ip9: ipv4Address} host {ip10: ipv4Address}
+ deny ip any any log
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 8
+```;
+ip_access_list = ```
+ip access-list extended INBOUND_MSDP_SA_FILTER
+ deny ip any host {ip5: ipv4Address}
+ deny ip any host {ip7: ipv4Address}
+ deny ip any host {ip9: ipv4Address}
+ deny ip any host {ip11: ipv4Address}
+ deny ip any host {ip13: ipv4Address}
+ deny ip any host {ip15: ipv4Address}
+ deny ip any host {ip17: ipv4Address}
+ deny ip any host {ip19: ipv4Address}
+ deny ip any {ip21: ipv4Address} {ip22: ipv4Address}
+ deny ip any {ip23: ipv4Address} {ip24: ipv4Address}
+ deny ip {ip25: ipv4Address} {ip26: ipv4Address} any
+ deny ip {ip27: ipv4Address} {ip28: ipv4Address} any
+ deny ip {ip29: ipv4Address} {ip30: ipv4Address} any
+ deny ip {ip31: ipv4Address} {ip32: ipv4Address} any
+ permit ip any any
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 2
+ip msdp sa-filter in {ip3: ipv4Address} list INBOUND_MSDP_SA_FILTER
+```;
+ip_access_list = ```
+ip access-list extended OUTBOUND_MSDP_SA_FILTER
+ deny ip {ip5: ipv4Address} {ip6: ipv4Address} any
+ permit ip any any
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 8
+ip msdp sa-filter out {ip3: ipv4Address} list OUTBOUND_MSDP_SA_FILTER
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 
+ip msdp sa-filter in {ip3: ipv4Address} list MSDP_SA_FILTER
+ip msdp sa-limit X.1.28.2 
+```;
+interface_1 = ```
+ ip address {ip: ipv4Address}
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Loopback12 remote-as 
+```;
+pattern = ```
+IPv6 Example: ipv6 cef 
+```;
+pattern = ```
+ipv6 hop-limit 128
+```;
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 nd ra suppress
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny ipv6 any any log undetermined-transport
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ permit ipv6 any host 2001:DB8::1:1:1234 routing-type 2
+ deny ipv6 any any log routing
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny hbh any any dest-option-type 4 log
+ deny hbh any any dest-option-type 195 log
+ deny hbh any any dest-option-type home-address log 
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 5 log
+ deny 60 any any dest-option-type 194 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 138 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny 60 any any dest-option-type 195 log
+ deny ipv6 any any log
+```; 
+interface_1 = ```
+ ipv6 address 2001::1:0:22/64
+ ipv6 traffic-filter FILTER_IPV6 in
+```; 
+ipv6_access_list = ```
+ipv6 access-list FILTER_IPV6
+ deny any any dest-option-type 2
+ deny any any dest-option-type 3
+ deny any any dest-option-type 6
+ deny any any dest-option-type 9
+ deny any any dest-option-type 10
+ deny any any dest-option-type 11
+ deny any any dest-option-type 12
+ deny any any dest-option-type 13
+ deny any any dest-option-type 14
+ deny any any dest-option-type 16
+ deny any any dest-option-type 34
+ deny any any dest-option-type 36
+ deny any any dest-option-type 37
+ deny any any dest-option-type 39
+ deny any any dest-option-type 47
+ deny any any dest-option-type 49
+ deny any any dest-option-type 255
+ deny ipv6 any any log
+```; 
+disable = ```
+ feature telnet
+ feature wccp
+ feature api
+ feature imp
+```;
+interface_1 = ```
+ dot1x pae authenticator
+ dot1x port-control auto
+ dot1x host-mode single-host
+ switchport access vlan 10
+```; 
+aaa_group = ```
+aaa group server radius RADIUS_GROUP 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address} 
+```; 
+pattern = ```
+aaa authentication dot1x default group RADIUS_GROUP
+radius-server host {ip5: ipv4Address} key 7 "xxxxxxxxxxx" authentication accounting timeout 5 retransmit 1 
+radius-server host {ip7: ipv4Address} key 7 " " authentication accounting timeout 5 retransmit 1
+```;
+show = ```
+VTP Status Information
+----------------------
+VTP Version : 2 (capable)
+Configuration Revision : 0
+Maximum VLANs supported locally : 1005
+Number of existing VLANs : 5
+VTP Operating Mode : Transparent
+VTP Domain Name : XXXXX
+VTP Pruning Mode : Disabled (Operationally Disabled)
+VTP V2 Mode : Disabled
+VTP Traps Generation : Disabled
+MD5 Digest : 0x0C 0x5E 0xC3 0x74 0x3F 0xB0 0x2F 0x49
+```;
+monitor_session = ```
+monitor session 1 
+ source interface Ethernet1/66 both
+ destination interface Ethernet1/68
+```; 
+monitor_session = ```
+monitor session 1 
+ source interface Ethernet1/66 both
+ destination interface Ethernet1/68
+```; 
+interface_1 = ```
+ dot1x pae authenticator
+ dot1x port-control auto
+ dot1x host-mode single-host
+ switchport access vlan 10
+```; 
+aaa_group = ```
+aaa group server radius RADIUS_GROUP 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address} 
+```; 
+pattern = ```
+aaa authentication dot1x default group RADIUS_GROUP
+radius-server host {ip5: ipv4Address} key 7 "xxxxxxxxxxx" authentication accounting timeout 5 retransmit 1 
+radius-server host {ip7: ipv4Address} key 7 " " authentication accounting timeout 5 retransmit 1
+```;
+pattern = ```
+spanning-tree guard root
+```;
+pattern = ```
+spanning-tree bpduguard enable
+```;
+pattern = ```
+hostname {host: string}
+spanning-tree loopguard default
+```;
+interface_1 = ```
+ switchport block unicast 
+```; 
+pattern = ```
+vlan 1,4,6-10
+ip dhcp snooping
+ip dhcp snooping vlan 4,6-10
+```;
+interface_1 = ```
+ ip verify source dhcp-snooping-vlan
+```; 
+pattern = ```
+hostname {host: string}
+ip arp inspection vlan 2,4-8,11
+```;
+interface_1 = ```
+ switchport access vlan 12
+ storm-control unicast unicast level 50.00
+ storm-control broadcast broadcast level 40
+```; 
+disable = ```
+ ip igmp snooping
+ ip igmp snooping vlan 11
+```;
+pattern = ```
+hostname {host: string}
+feature udld
+udld disabled
+```;
+interface_1 = ```
+ shutdown
+ switchport access vlan 999
+```; 
+interface_4 = ```
+ switchport mode trunk
+ switchport trunk allowed vlan 1-998,1000-4094
+```; 
+show = ```
+VLAN Name Status Ports
+---- -------------------------------- --------- -------------------------------
+ 1 default active Eth1/1, Eth1/2
+ 10 VLAN0010 active Eth1/1, Eth1/2, Eth1/3, Eth1/4
+ Eth1/5, Eth1/6, Eth1/7, Eth1/8
+ Eth1/9, Eth1/10, Eth1/11
+ Eth1/12, Eth1/13, Eth1/14
+ Eth1/15, Eth1/16, Eth1/17
+ Eth1/18, Eth1/19, Eth1/20
+ Eth1/21, Eth1/22, Eth1/23
+ Eth1/24, Eth1/25, Eth1/26
+ Eth1/27, Eth1/28, Eth1/29
+ Eth1/30
+ 11 VLAN0011 active Eth1/1, Eth1/2, Eth1/31
+ Eth1/32, Eth1/33, Eth1/34
+ Eth1/35, Eth1/36, Eth1/37
+ Eth1/38, Eth1/39, Eth1/40 
+```;
+show = ```
+--------------------------------------------------------------------------------
+Port Native Status Port
+ Vlan Channel
+--------------------------------------------------------------------------------
+Eth1/1 1 trunking --
+Eth1/2 1 trunking --
+--------------------------------------------------------------------------------
+Port Vlans Allowed on Trunk
+--------------------------------------------------------------------------------
+Eth1/1 1-998,1000-4094
+Eth1/2 1-998,1000-4094
+```;
+interface_2 = ```
+ description {desc: string}
+ ip address {subnet1: ipv4Subnet}
+```; 
+interface_1 = ```
+ switchport
+ switchport mode trunk
+ switchport trunk allowed vlan 1-998,1000-4094
+```; 
+interface_2 = ```
+ switchport
+ switchport mode trunk
+ switchport trunk allowed vlan 2-998,1000-4094
+```; 
+interface_4 = ```
+ switchport access vlan 10
+```; 
+interface_1 = ```
+ switchport
+ switchport mode trunk
+ switchport trunk native vlan 44
+```; 
+interface_1 = ```
+ switchport
+ switchport mode trunk
+ switchport trunk native vlan 44
+```; 
+interface_2 = ```
+ switchport
+ switchport access vlan 11
+```; 
+interface_3 = ```
+ switchport
+ switchport access vlan 12
+```; 
+pattern = ```
+line vty 
+ session-limit 2
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+ip_access_list = ```
+ip access-list MGMT_NET 
+ 10 permit ip {subnet3: ipv4Subnet} any
+ 20 deny ip any any log 
+```; 
+pattern = ```
+line vty
+ access-class MGMT_NET in
+ip access-group MGMT_NET in 
+```;
+pattern = ```
+ssh login-attempts 3
+```;
+pattern = ```
+banner motd #
+You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.
+By using this IS (which includes any device attached to this IS), you consent to the following conditions:
+-The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.
+-At any time, the USG may inspect and seize data stored on this IS.
+-Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.
+-This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.
+-Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+pattern = ```
+logging logfile LOG_FILE 6
+logging level authpri 6
+```;
+pattern = ```
+ip access-list extended BLOCK_INBOUND
+ deny icmp any any log
+logging ip access-list cache entries 
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+disable = ```
+ feature telnet
+ feature dhcp
+ feature wccp
+ feature api
+ feature imp
+```;
+pattern = ```
+username  password {password1: string} $5$88SPgpAn$Q6/17o5U/5lz4dNL1iQZuj/1a0wcKdrk29ZH1HJsnF. role priv-9
+```;
+disable = ```
+ aaa authentication login default fallback error local
+```;
+pattern = ```
+fips mode enable
+```;
+pattern = ```
+password {password1: string} strength-check
+```;
+pattern = ```
+password {password1: string} strength-check
+```;
+pattern = ```
+password {password1: string} strength-check
+```;
+pattern = ```
+password {password1: string} strength-check
+```;
+pattern = ```
+line console
+ exec-timeout 10 
+line vty 
+ exec-timeout 10 
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+pattern = ```
+logging logfile LOGFILE1 6 size 
+```;
+pattern = ```
+logging server {ip1: ipv4Address} 2
+```;
+pattern = ```
+ntp distribute
+ntp server {ip1: ipv4Address}
+ntp server {ip3: ipv4Address}
+ntp commit
+```;
+pattern = ```
+clock timezone EST -5 0
+```;
+pattern = ```
+snmp-server user NETOPS network-operator auth sha 0xb40efa3f311006de39b9d0725e663277d84ca332 localizedkey
+snmp-server host {ip1: ipv4Address} traps version 3 auth NETOPS
+```;
+show = ```
+______________________________________________________________
+ SNMP USERS 
+______________________________________________________________
+User Auth Priv(enforce) Groups acl_filter 
+____ ____ ___________ ______ __________ 
+NETOPS sha no network-operator 
+```;
+pattern = ```
+snmp-server user NETOPS auth sha 5Er23@#as178 priv aes-128 
+```;
+show = ```
+______________________________________________________________
+ SNMP USERS 
+______________________________________________________________
+User Auth Priv(enforce) Groups acl_filter 
+____ ____ ___________ ______ __________ 
+NETOPS sha aes-128 network-operator 
+```;
+pattern = ```
+ntp distribute
+ntp server {ip1: ipv4Address} key 1
+ntp server {ip3: ipv4Address} key 1
+ntp authenticate
+ntp authentication-key 1 md5  7
+ntp trusted-key 1
+ntp commit
+```;
+pattern = ```
+fips mode enable
+```;
+pattern = ```
+fips mode enable
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list extended CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+pattern = ```
+logging logfile LOG_FILE 6
+logging level authpri 6
+```;
+aaa_group = ```
+aaa group server radius RADIUS_SERVERS 
+ server {ip1: ipv4Address} 
+ server {ip3: ipv4Address}
+```; 
+pattern = ```
+aaa accounting default group RADIUS_SERVERS
+```;
+pattern = ```
+logging level authpri 6
+```;
+pattern = ```
+logging logfile LOG_FILE 6
+logging level authpri 6
+```;
+pattern = ```
+logging server {ip1: ipv4Address} 6
+```;
+pattern = ```
+aaa authentication login default group RADIUS_SERVERS 
+aaa authentication login console group RADIUS_SERVERS
+radius-server host {ip1: ipv4Address} key 7 "xxxxxx" authentication accounting 
+aaa group server radius RADIUS_SERVERS 
+ server {ip3: ipv4Address}
+```;
+event_manager = ```
+event manager applet BACKUP_CONFIG
+ event syslog pattern "SYSLOG_CONFIG_I"
+ action 1 cli command "copy startup-config tftp://10.1.48.10/nx-config vrf default" 
+ action 2 syslog priority informational msg "Configuration backup was executed"
+```; 
+pattern = ```
+crypto ca trustpoint CA_X 
+ enrollment terminal
+The output will list the following information for each certificate:
+Trustpoint (will map to a configured trustpoint from step 1)
+Common Name (CN) of the issuer
+Organization (O) of the issuer
+Organization Unit (OU) of the issuer
+```;
+pattern = ```
+logging server {ip1: ipv4Address} 6
+```;
+pattern = ```
+www.cisco.com/c/en/us/support/ios-nx-os-software
+```;
+interface_1 = ```
+ no switchport
+ ip access-group FILTER_SERVER_TRAFFIC in
+ ip address {subnet1: ipv4Subnet}
+ no shutdown 
+```; 
+ip_access_list = ```
+ip access-list FILTER_SQL_VLAN
+ 10 permit tcp any any eq 1433 
+ 20 permit tcp any any eq 1434 
+ 30 permit tcp any any eq 4033 
+ 40 permit icmp any any 
+ 50 deny ip any any
+```; 
+interface_2 = ```
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_PRINTER_VLAN out
+```; 
+interface_3 = ```
+ ip address {ip: ipv4Address}
+ ip access-group FILTER_SQL_VLAN out
+```; 
+router_bgp = ```
+router bgp 1
+ router-id {ip1: ipv4Address}
+ address-family ipv4 unicast
+ neighbor {ip3: ipv4Address} remote-as 2
+ password {password1: string} 
+```; 
+key_chain = ```
+key chain EIGRP_KEY
+ key 1
+ key-string {key1: string}
+```; 
+interface_1 = ```
+ no switchport
+ ip router eigrp 1
+ ip authentication mode eigrp 1 md5
+ ip authentication key-chain eigrp 1 EIGRP_KEY
+```; 
+router_eigrp = ```
+router eigrp 1
+ authentication mode md5
+ authentication key-chain EIGRP_KEY
+```; 
+interface_2 = ```
+ no switchport
+ isis authentication-type md5 level-1
+ isis authentication key-chain  level-1
+ ip router isis 1
+```; 
+interface_3 = ```
+ no switchport
+ ip ospf authentication
+ ip ospf authentication key-chain OSPF_KEY
+ ip router ospf 1 area {ip5: ipv4Address}
+```; 
+interface_4 = ```
+ no switchport
+ ip rip authentication mode md5
+ ip rip authentication key-chain RIP_KEY
+```; 
+key_chain = ```
+key chain OSPF_KEY
+ key 1
+ key-string 7 {key1: string}
+ accept-lifetime 00:00:00 Oct 01 2019 01:05:00 Jan 01 2020
+ send-lifetime 00:00:00 Oct 01 2019 23:59:59 Dec 31 2019
+ key 2
+ key-string 7 {key2: string}
+ accept-lifetime 23:55:00 Dec 31 2019 01:05:00 Apr 01 2020
+ send-lifetime 00:00:00 Jan 01 2020 23:59:59 Mar 31 2020
+```; 
+router_bgp = ```
+router bgp 1
+ router-id {ip1: ipv4Address}
+ address-family ipv4 unicast
+ neighbor {ip3: ipv4Address} remote-as 2
+ password {password1: string} 
+```; 
+interface_1 = ```
+ no switchport
+ ip router eigrp 1
+ ip authentication mode eigrp 1 md5
+```; 
+interface_2 = ```
+ no switchport
+ isis authentication-type md5 level-1
+```; 
+interface_3 = ```
+ no switchport
+ mac-address 0000.0000.002f
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 3 3ec66c90c104ad13
+```; 
+interface_4 = ```
+ no switchport
+ ip rip authentication mode md5
+```; 
+pattern = ```
+router eigrp 1
+ authentication mode md5
+```;
+key_chain = ```
+key chain OSPF_KEY
+ key 1
+ key-string 7 {key1: string}
+ accept-lifetime 00:00:00 Oct 01 2019 01:05:00 Jan 01 2020
+ send-lifetime 00:00:00 Oct 01 2019 23:59:59 Dec 31 2019
+ cryptographic-algorithm hmac-sha-256
+ key 2
+ key-string 7 {key2: string}
+ accept-lifetime 23:55:00 Dec 31 2019 01:05:00 Apr 01 2020
+ send-lifetime 00:00:00 Jan 01 2020 23:59:59 Mar 31 2020
+ cryptographic-algorithm hmac-sha-256
+```; 
+interface_1 = ```
+ no switchport
+ ip ospf authentication key-chain OSPF_KEY
+```; 
+interface_1 = ```
+ shutdown
+ no switchport
+```; 
+disable = ```
+ feature telnet
+ feature dhcp
+ feature wccp
+ feature api
+ feature imp
+```;
+pattern = ```
+callhome
+```;
+disable = ```
+ enable
+```;
+pattern = ```
+class-map match-all CoPP_CRITICAL 
+match access-group name CoPP_CRITICAL 
+class-map match-any CoPP_IMPORTANT 
+match access-group name CoPP_IMPORTANT 
+match protocol arp 
+class-map match-all CoPP_NORMAL 
+match access-group name CoPP_NORMAL 
+class-map match-any CoPP_UNDESIRABLE 
+match access-group name CoPP_UNDESIRABLE 
+class-map match-all CoPP_DEFAULT 
+match access-group name CoPP_DEFAULT 
+ip access-list CoPP_DEFAULT 
+ permit ip any any 
+policy-map CONTROL_PLANE_POLICY 
+class CoPP_CRITICAL 
+police 512000 8000 conform-action transmit exceed-action transmit 
+class CoPP_IMPORTANT 
+police 256000 4000 conform-action transmit exceed-action drop 
+class CoPP_NORMAL 
+police 128000 2000 conform-action transmit exceed-action drop 
+class CoPP_UNDESIRABLE 
+police 8000 1000 conform-action drop exceed-action drop 
+class CoPP_DEFAULT
+police 64000 1000 conform-action transmit exceed-action drop 
+control-plane 
+service-policy input CONTROL_PLANE_POLICY 
+```;
+ip_access_list = ```
+ip access-list INTERNAL_ACL
+ 10 permit icmp any any 
+ 20 permit ospf {subnet11: ipv4Subnet} {subnet12: ipv4Subnet}
+ 30 permit tcp {subnet13: ipv4Subnet} {subnet14: ipv4Subnet} eq 22
+ 40 permit tcp {subnet15: ipv4Subnet} {subnet16: ipv4Subnet} eq tacacs
+ 50 permit udp {subnet17: ipv4Subnet} {subnet18: ipv4Subnet} eq snmp
+ 60 permit udp {subnet19: ipv4Subnet} {subnet20: ipv4Subnet} eq ntp
+ 70 deny ip any {subnet21: ipv4Subnet} log
+ 90 deny ip any any log
+```; 
+interface_1 = ```
+ no switchport
+ ip access-group EXTERNAL_ACL in
+ ip address {ip: ipv4Address}
+```; 
+interface_2 = ```
+ no switchport
+ ip access-group INTERNAL_ACL in
+ ip address {ip: ipv4Address}
+```; 
+ip_access_list = ```
+ip access-list INTERNAL_ACL
+ 10 deny icmp any host {subnet9: ipv4Subnet} fragments
+ 20 permit icmp any any
+```; 
+disable = ```
+interface {name1:string}
+ ip arp gratuitous request
+```;
+disable = ```
+interface {name1:string}
+ ip directed-broadcast
+```;
+disable = ```
+interface {name1:string}
+ ip unreachables
+```;
+disable = ```
+interface {name1:string}
+ ip redirects
+```;
+ip_access_list = ```
+ip access-list EXTERNAL_ACL
+ 10 permit tcp {subnet1: ipv4Subnet} eq bgp {subnet2: ipv4Subnet}
+ 20 permit tcp {subnet3: ipv4Subnet} {subnet4: ipv4Subnet} eq bgp
+ 30 permit icmp {subnet5: ipv4Subnet} {subnet6: ipv4Subnet} echo
+ 90 deny ip any any log
+```; 
+interface_1 = ```
+ no switchport
+ ip access-group EXTERNAL_ACL in
+ ip address {ip: ipv4Address}
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL
+ 10 permit tcp {subnet1: ipv4Subnet} eq bgp {subnet2: ipv4Subnet}
+ 20 permit tcp {subnet3: ipv4Subnet} {subnet4: ipv4Subnet} eq bgp
+ 30 permit icmp {subnet5: ipv4Subnet} {subnet6: ipv4Subnet} echo
+ 40 permit icmp {subnet7: ipv4Subnet} {subnet8: ipv4Subnet} echo-reply
+ 50 permit tcp any {subnet9: ipv4Subnet} eq www
+ 90 deny ip any any log
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EXTERNAL_ACL in
+ ip address {ip: ipv4Address}
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL
+ 10 permit tcp any any established 
+ 20 permit tcp {subnet1: ipv4Subnet} eq bgp {subnet2: ipv4Subnet}
+ 30 permit tcp {subnet3: ipv4Subnet} {subnet4: ipv4Subnet} eq bgp
+ 40 permit icmp {subnet5: ipv4Subnet} {subnet6: ipv4Subnet} echo
+ 50 permit icmp {subnet7: ipv4Subnet} {subnet8: ipv4Subnet} echo-reply
+ 60 permit tcp any {subnet9: ipv4Subnet} eq www
+ 90 deny ip any any log
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL
+ 10 permit tcp any any established 
+ 20 permit tcp {subnet1: ipv4Subnet} eq bgp {subnet2: ipv4Subnet}
+ 30 permit tcp {subnet3: ipv4Subnet} {subnet4: ipv4Subnet} eq bgp
+ 40 permit icmp {subnet5: ipv4Subnet} {subnet6: ipv4Subnet} echo
+ 50 permit icmp {subnet7: ipv4Subnet} {subnet8: ipv4Subnet} echo-reply
+ 60 permit tcp any {subnet9: ipv4Subnet} eq www
+ 70 permit udp {subnet11: ipv4Subnet} {subnet12: ipv4Subnet} eq ntp
+ 90 deny ip any any log
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL
+ 10 deny ip {subnet1: ipv4Subnet} any log
+ 20 deny ip {subnet3: ipv4Subnet} any log
+ 30 deny ip {subnet5: ipv4Subnet} any log
+ 40 deny ip {subnet7: ipv4Subnet} any log
+ 50 deny ip {subnet9: ipv4Subnet} any log
+ 60 deny ip {subnet11: ipv4Subnet} any log
+ 70 deny ip {subnet13: ipv4Subnet} any log
+ 80 deny ip {subnet15: ipv4Subnet} any log
+ 90 deny ip {subnet17: ipv4Subnet} any log
+ 100 deny ip {subnet19: ipv4Subnet} any log
+ 110 deny ip {subnet21: ipv4Subnet} any log
+ 120 deny ip {subnet23: ipv4Subnet} any log
+ 130 deny ip {subnet25: ipv4Subnet} any log
+ 140 permit tcp any any established 
+ 210 deny ip any any log
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EXTERNAL_ACL in
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip address {subnet1: ipv4Subnet}
+ ip verify unicast source reachable-via rx
+```; 
+ip_access_list = ```
+ip access-list EGRESS_FILTER
+ 10 permit udp {subnet3: ipv4Subnet} any eq domain
+ 20 permit tcp {subnet5: ipv4Subnet} any eq ftp
+ 30 permit tcp {subnet7: ipv4Subnet} any eq ftp-data
+ 40 permit tcp {subnet9: ipv4Subnet} any eq www
+ 50 permit icmp {subnet11: ipv4Subnet} any
+ 60 permit icmp {subnet13: ipv4Subnet} any echo
+ 70 deny ip any any
+```; 
+interface_2 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EGRESS_FILTER in
+ ip address {subnet15: ipv4Subnet}
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EXTERNAL_ACL in
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL
+ 10 permit tcp any any established 
+ 20 permit tcp {subnet1: ipv4Subnet} eq bgp {subnet2: ipv4Subnet}
+ 30 permit tcp {subnet3: ipv4Subnet} {subnet4: ipv4Subnet} eq bgp
+ 40 permit icmp {subnet5: ipv4Subnet} {subnet6: ipv4Subnet} echo
+ 50 permit icmp {subnet7: ipv4Subnet} {subnet8: ipv4Subnet} echo-reply
+ 60 permit tcp any {subnet9: ipv4Subnet} eq www
+ 70 permit udp {subnet11: ipv4Subnet} {subnet12: ipv4Subnet} eq ntp
+ 140 deny ip any any log
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EXTERNAL_ACL in
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EGRESS_FILTER in
+ ip address {subnet1: ipv4Subnet}
+```; 
+disable = ```
+ ip source-route
+```;
+disable = ```
+interface {name1:string}
+ lldp transmit
+```;
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ no cdp enable
+```; 
+disable = ```
+interface {name1:string}
+ ip proxy-arp
+```;
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip access-group EXTERNAL_ACL_OUTBOUND out
+ ip address {ip: ipv4Address}
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL_OUTBOUND
+ 10 deny tcp any any eq tacacs log 
+ 20 deny tcp any any eq 22 log 
+ 30 deny udp any any eq snmp log 
+ 40 deny udp any any eq snmptrap log 
+ 50 deny udp any any eq syslog log 
+ 60 permit tcp any any eq www log 
+ 70 deny ip any any log
+```; 
+interface_1 = ```
+ description {desc: string}
+ no switchport
+ ip address {ip: ipv4Address}
+ ip access-group INGRESS_MANAGEMENT_ACL in
+ ip access-group EGRESS_MANAGEMENT_ACL in
+```; 
+pattern = ```
+ip access-list MGMT_TRAFFIC_ACL
+ 10 deny ip any any log 
+```;
+pattern = ```
+router bgp 
+ neighbor {ip1: ipv4Address}
+```;
+disable = ```
+ disable-connected-check
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 2
+ password {password1: string} 
+ address-family ipv4 unicast
+ neighbor {ip5: ipv4Address} remote-as 
+ password {password2: string} 
+ address-family ipv4 unicast
+```; 
+router_bgp = ```
+router bgp 
+ router-id {ip7: ipv4Address}
+ neighbor {ip9: ipv4Address} remote-as 
+ password {password3: string} 
+ address-family ipv4 unicast
+ route-map FILTER_PREFIX_MAP in
+ neighbor {ip11: ipv4Address} remote-as 
+ password {password4: string} 
+ address-family ipv4 unicast
+ route-map FILTER_PREFIX_MAP in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 15 deny {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 20 deny {subnet7: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 25 deny {subnet9: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 30 deny {subnet11: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 35 deny {subnet13: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 40 deny {subnet15: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 45 deny {subnet17: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 50 deny {subnet19: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 55 deny {subnet21: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 60 deny {subnet23: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 65 deny {subnet25: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 70 deny {subnet27: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet29: ipv4Subnet} ge 8
+route-map FILTER_PREFIX_MAP permit 10
+ ip address {ip: ipv4Address}
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 
+ password {password1: string} 
+ address-family ipv4 unicast
+ prefix-list PREFIX_FILTER in
+ neighbor {ip5: ipv4Address} remote-as 
+ password {password2: string} 
+ address-family ipv4 unicast
+ prefix-list PREFIX_FILTER in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 74 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER seq 75 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 64514
+ password {password1: string} 
+ address-family ipv4 unicast
+ prefix-list FILTER_PREFIXES_CUST1 in
+ neighbor {ip5: ipv4Address} remote-as 64516
+ password {password2: string} 
+ address-family ipv4 unicast
+ prefix-list FILTER_PREFIXES_CUST1 in
+```; 
+pattern = ```
+ip prefix-list PREFIX_FILTER_CUST1 seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST1 seq 10 deny {subnet3: ipv4Subnet} ge 8
+ip prefix-list PREFIX_FILTER_CUST2 seq 5 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list PREFIX_FILTER_CUST2 seq 10 deny {subnet7: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 64514
+ password {password1: string} 
+ address-family ipv4 unicast
+ prefix-list CE_PREFIX_ADVERTISEMENTS out
+ neighbor {ip5: ipv4Address} remote-as 64516
+ password {password2: string} 
+ address-family ipv4 unicast
+ prefix-list CE_PREFIX_ADVERTISEMENTS out
+```; 
+pattern = ```
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 5 permit {subnet1: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 10 permit {subnet3: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 15 permit {subnet5: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 20 permit {subnet7: ipv4Subnet} le 32
+ip prefix-list CE_PREFIX_ADVERTISEMENTS seq 80 deny {subnet9: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 
+ password {password1: string} 
+ address-family ipv4 unicast
+ FILTER _CORE_PREFIXES out
+ neighbor {ip5: ipv4Address} remote-as 
+ password {password2: string} 
+ address-family ipv4 unicast
+ prefix-list FILTER _CORE_PREFIXES out
+```; 
+pattern = ```
+ip prefix-list FILTER_CORE_PREFIXES seq 5 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 10 deny {subnet3: ipv4Subnet} le 32
+ip prefix-list FILTER _CORE_PREFIXES seq 15 permit {subnet5: ipv4Subnet} ge 8
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ no enforce-first-as
+```; 
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 
+ password {password1: string} 
+ address-family ipv4 unicast
+ filter-list AS_PATH in
+```; 
+pattern = ```
+ip as-path access-list AS_PATH permit ^yy$
+ip as-path access-list 10 AS_PATH .*
+```;
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 
+ password {password1: string} 
+ address-family ipv4 unicast
+ maximum-prefix 
+ neighbor {ip5: ipv4Address} remote-as 
+ password {password2: string} 
+ address-family ipv4 unicast
+ maximum-prefix 
+```; 
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ neighbor {ip3: ipv4Address} remote-as 
+ password {password1: string} 
+ address-family ipv4 unicast
+ prefix-list FILTER_PREFIX_LENGTH in
+ neighbor {ip5: ipv4Address} remote-as 
+ password {password2: string} 
+ address-family ipv4 unicast
+ prefix-list FILTER_PREFIX_LENGTH in
+```; 
+pattern = ```
+ip prefix-list FILTER_PREFIX_LENGTH seq 5 permit {subnet1: ipv4Subnet} ge 8 le 24
+ip prefix-list FILTER_PREFIX_LENGTH seq 10 deny {subnet3: ipv4Subnet} le 32
+```;
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+```; 
+router_bgp = ```
+router bgp 
+ router-id {ip1: ipv4Address}
+ address-family ipv4 unicast
+ neighbor {ip3: ipv4Address} remote-as 
+ password {password1: string} 
+ update-source loopback0 
+```; 
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+```; 
+pattern = ```
+mpls ldp configuration
+ router-id lo0
+```;
+pattern = ```
+router ospf 1
+ mpls ldp sync
+router isis
+ mpls ldp sync
+```;
+interface_1 = ```
+ mpls traffic-eng tunnels
+ mpls ip
+```; 
+pattern = ```
+ip rsvp 
+ signaling refresh reduction bundle-max-size
+```;
+disable = ```
+ mpls ip propagate-ttl
+```;
+interface_1 = ```
+ no switchport
+ vrf member CUST1
+ ip address {subnet1: ipv4Subnet}
+```; 
+interface_2 = ```
+ no switchport
+ vrf member CUST2
+ ip address {subnet3: ipv4Subnet}
+```; 
+vrf_context = ```
+vrf context CUST1
+ address-family ipv4 unicast
+ route-target export 13:13
+ route-target import 13:13
+```; 
+vrf_context = ```
+vrf context CUST1
+ rd 13:13
+ address-family ipv4 unicast
+ route-target export 13:13
+ route-target import 13:13
+```; 
+mpls_ldp = ```
+mpls ldp configurations
+ password {password1: string} for LDP_NBR1
+ password {password2: string} 1 for LDP_NBR1 key-chain LDP_KEY
+ password {password3: string} for LDP_NBR2
+ password {password4: string} 1 for LDP_NBR2 key-chain LDP_KEY
+```; 
+pattern = ```
+ip prefix-list LDP_NBR1 permit {subnet1: ipv4Subnet}
+ip prefix-list LDP_NBR2 permit {subnet3: ipv4Subnet}
+```;
+l2vpn_xconnect = ```
+l2vpn xconnect context VC55
+ member Ethernet2/1
+ member Pseudowire55
+```; 
+interface_1 = ```
+ neighbor {ip1: ipv4Address} 55
+ inherit port-profile MPLS_PROFILE
+```; 
+pattern = ```
+port-profile type pseudowire MPLS_PROFILE
+ encapsulation mpls
+```;
+bridge_domain_100 = ```
+bridge-domain 100
+ member vfi CUST1_VPLS
+ member Ethernet2/2 service instance 1
+```; 
+interface_1 = ```
+ service instance 1 ethernet
+ encapsulation dot1q 100
+```; 
+interface_2 = ```
+ encapsulation mpls
+ neighbor {ip1: ipv4Address} 100
+```; 
+interface_3 = ```
+ encapsulation mpls
+ neighbor {ip3: ipv4Address} 100
+```; 
+pattern = ```
+l2vpn vfi context CUST1_VPLS
+ vpn id 100
+member Pseudowire12
+member Pseudowire13
+```;
+interface_1 = ```
+ no shutdown
+ no switchport
+ storm-control broadcast level 40.00
+ service instance 1 ethernet
+ encapsulation dot1q 100
+```; 
+pattern = ```
+bridge-domain 100 
+ no ip igmp snooping
+```;
+pattern = ```
+bridge-domain 100 
+ mac limit maximum addresses 
+```;
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+ ip access-group BLOCK_TO_CORE in
+```; 
+ip_access_list = ```
+ip access-list BLOCK_TO_CORE
+ deny ip any {ip1: ipv4Address} {ip2: ipv4Address} log
+ permit ip any any
+```; 
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+ ip access-group BLOCK_TO_CORE in
+ ip verify unicast source reachable-via any
+```; 
+disable = ```
+ ip source-route
+```;
+class_C2_VOICE = ```
+class C2_VOICE
+ priority percent 10
+ class VOICE
+ priority percent 15
+ class VIDEO
+ bandwidth percent 25
+```; 
+class_CONTROL_PLANE = ```
+class CONTROL_PLANE
+ priority percent 10
+ class PREFERRED_DATA
+ bandwidth percent 25
+ class class-default
+ bandwidth percent 15
+```; 
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+ service-policy output QOS_POLICY
+```; 
+interface_2 = ```
+ ip address {subnet3: ipv4Subnet}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all PREFERRED_DATA
+ match ip dscp af33
+policy-map QOS_POLICY
+```;
+class_C2_VOICE = ```
+class C2_VOICE
+ priority percent 10
+ class VOICE
+ priority percent 15
+ class VIDEO
+ bandwidth percent 25
+```; 
+class_CONTROL_PLANE = ```
+class CONTROL_PLANE
+ priority percent 10
+ class PREFERRED_DATA
+ bandwidth percent 25
+ class class-default
+ bandwidth percent 15
+```; 
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+ service-policy output QOS_POLICY
+```; 
+interface_2 = ```
+ ip address {subnet3: ipv4Subnet}
+ service-policy output QOS_POLICY
+```; 
+pattern = ```
+class-map match-all PREFERRED_DATA
+ match ip dscp af33
+policy-map QOS_POLICY
+```;
+pattern = ```
+class-map match-all SCAVENGER
+match ip dscp cs1
+policy-map QOS_POLICY
+class SCAVENGER
+bandwidth percent 5
+class class-default
+bandwidth percent 10
+```;
+disable = ```
+ class class-default
+```;
+disable = ```
+interface {name1:string}
+ ip pim sparse-mode
+```;
+interface_1 = ```
+ no switchport
+ ip address {subnet1: ipv4Subnet}
+ ip pim sparse-mode
+ ip pim neighbor-policy prefix-list PIM_NEIGHBOR
+ no shutdown
+```; 
+pattern = ```
+ip prefix-list PIM_NEIGHBOR seq 5 permit {subnet3: ipv4Subnet}
+ip prefix-list PIM_NEIGHBOR seq 10 deny {subnet5: ipv4Subnet} le 32
+```;
+interface_1 = ```
+ no switchport
+ ip access-group FILTER_TRAFFIC_IN in
+ ip access-group FILTER_TRAFFIC_OUT out
+ ip address {subnet1: ipv4Subnet}
+ ip pim sparse-mode
+ ip pim border
+```; 
+ip_access_list = ```
+ip access-list FILTER_TRAFFIC_OUT
+ 10 deny ip any {subnet5: ipv4Subnet}
+ 80 permit ip any any
+```; 
+interface_1 = ```
+ no switchport
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip address {subnet9: ipv4Subnet}
+ ip pim sparse-mode
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL_INBOUND
+ 10 permit tcp any any established 
+ 20 permit tcp {subnet11: ipv4Subnet} {subnet12: ipv4Subnet} eq 639
+ 30 deny tcp any {subnet13: ipv4Subnet} eq 639 log
+ 40 permit tcp {subnet15: ipv4Subnet} {subnet16: ipv4Subnet} eq bgp
+ 50 permit tcp {subnet17: ipv4Subnet} eq bgp {subnet18: ipv4Subnet}
+ 60 permit pim {subnet19: ipv4Subnet} {subnet20: ipv4Subnet}
+ 120 deny ip any any log
+```; 
+pattern = ```
+ip pim register-policy PIM_REGISTER_FILTER
+route-map PIM_REGISTER_FILTER deny 50
+ match ip multicast source {subnet7: ipv4Subnet}
+```;
+pattern = ```
+ip pim register-policy PIM_REGISTER_FILTER
+route-map PIM_REGISTER_FILTER deny 50
+ match ip multicast source {subnet7: ipv4Subnet}
+```;
+interface_1 = ```
+ no switchport
+ ip address {subnet5: ipv4Subnet}
+ ip pim sparse-mode
+ ip pim jp-policy PIM_JOIN_FILTER in
+```; 
+pattern = ```
+route-map PIM_JOIN_FILTER permit 20
+ match ip multicast group {subnet3: ipv4Subnet}
+```;
+interface_1 = ```
+ no switchport
+ ip address {subnet1: ipv4Subnet} ip pim sparse-mode
+ ip igmp version 3
+ ip igmp report-policy ALLOWED_GROUPS
+```; 
+pattern = ```
+route-map ALLOWED_GROUPS deny 40
+ match ip multicast group {subnet9: ipv4Subnet}
+```;
+interface_1 = ```
+ no switchport
+ ip address {subnet1: ipv4Subnet}
+ ip pim sparse-mode
+ ip igmp version 3
+ ip igmp report-policy ALLOWED_SOURCES
+```; 
+pattern = ```
+route-map ALLOWED_SOURCES deny 30
+ match ip multicast source {subnet7: ipv4Subnet}
+```;
+interface_1 = ```
+ no switchport
+ ip address {subnet1: ipv4Subnet}
+ ip pim sparse-mode
+ ip igmp version 3
+ ip igmp state-limit 
+```; 
+pattern = ```
+ip pim spt-threshold infinity group-list prefix-list SPT_GROUPS
+```;
+interface_1 = ```
+ no switchport
+ ip access-group EXTERNAL_ACL_INBOUND in
+ ip address {subnet1: ipv4Subnet}
+ ip pim sparse-mode
+```; 
+ip_access_list = ```
+ip access-list EXTERNAL_ACL_INBOUND
+ 10 permit tcp any any established 
+ 20 permit tcp {subnet3: ipv4Subnet} {subnet4: ipv4Subnet} eq 639
+ 30 deny tcp any {subnet5: ipv4Subnet} eq 639 log
+ 40 permit tcp {subnet7: ipv4Subnet} {subnet8: ipv4Subnet} eq bgp
+ 50 permit tcp {subnet9: ipv4Subnet} eq bgp {subnet10: ipv4Subnet}
+ 60 permit pim {subnet11: ipv4Subnet} {subnet12: ipv4Subnet}
+ 120 deny ip any any log
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} remote-as 
+ip msdp peer {ip3: ipv4Address} connect-source Ethernet2/3 remote-as 8
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Ethernet2/1 remote-as 
+ip msdp sa-policy {ip3: ipv4Address} prefix-list INBOUND_MSDP_SA_FILTER in
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 10 deny {subnet1: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 15 deny {subnet3: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 20 deny {subnet5: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 25 deny {subnet7: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 30 deny {subnet9: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 35 deny {subnet11: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 40 deny {subnet13: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 45 deny {subnet15: ipv4Subnet}
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 50 deny {subnet17: ipv4Subnet} le 32
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 55 deny {subnet19: ipv4Subnet} le 32
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 60 deny {subnet21: ipv4Subnet} le 32
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 70 deny {subnet23: ipv4Subnet} le 32
+ip prefix-list INBOUND_MSDP_SA_FILTER seq 75 permit {subnet25: ipv4Subnet} ge 8
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Ethernet2/1 remote-as 
+ip msdp sa-policy {ip3: ipv4Address} prefix-list OUTBOUND_MSDP_SA_FILTER out
+ip prefix-list OUTBOUND_MSDP_SA_FILTER seq 10 deny {subnet1: ipv4Subnet} le 32
+ip prefix-list OUTBOUND_MSDP_SA_FILTER seq 20 permit {subnet3: ipv4Subnet} ge 8
+```;
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Ethernet2/1 remote-as 
+ip msdp sa-limit {ip3: ipv4Address} 
+```;
+interface_1 = ```
+ ip address {subnet1: ipv4Subnet}
+```; 
+pattern = ```
+ip msdp peer {ip1: ipv4Address} connect-source Loopback12 remote-as 
+```;
+interface_1 = ```
+  no switchport
+  ipv6 address 2001::1:0:1/64
+  ipv6 nd hop-limit 32
+  no shutdown 
+```; 
+interface_2 = ```
+  no switchport
+  ipv6 address 2001::1:1:1/64
+  ipv6 nd hop-limit 32
+  no shutdown 
+```; 
+interface_1 = ```
+  no switchport
+  ipv6 address 2001::1:24:3/64
+  ipv6 nd suppress-ra
+  no shutdown 
+```; 

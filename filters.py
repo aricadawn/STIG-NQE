@@ -188,9 +188,13 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
                 pattern[num] = ' ' + item
 
         if showCount == 0 :
-            if re.search(r'#show|# show', item):
+            # if re.search(r'#show|# show', item):
+            if re.search(r'show', item):
                 showCount += 1
-                custom = custom.format(item.split('#')[1].lstrip())
+                if re.search(r'#', item):
+                    custom = custom.format(item.split('#')[1].lstrip())
+                else:
+                    custom = custom.format(item)
         elif item != '' and not re.search(r'#', item):
             show.append(item)    
         if re.match('^no', item) and item not in isPresent:
@@ -201,7 +205,7 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
                 isPresent.append(item)
         
         try:
-            if len(item) > 0 and item not in show and not re.search(r'#show|# show', item) and item not in isPresent:
+            if len(item) > 0 and item not in show and not re.search(r'show', item) and item not in isPresent:
                 if item[0] != ' ':
                     key = item
                     setname(dictionary, key)
