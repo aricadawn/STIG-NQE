@@ -238,7 +238,7 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
         2. Creates interface function to return a list of violating interfaces
         3. Formats query to search device configuration for pattern and return violating devices
         '''
-        if (len(patternVars[key]) > 1 or (key.startswith('interface') and len(patternVars[key]) > 0)):
+        if (len(patternVars[key]) > 2 or (key.startswith('interface') and len(patternVars[key]) > 0)):
             queryLine += '{} = ```\n'.format(key.split('{')[0].rstrip().replace(' ', '_').replace('.', '').replace('-', '_').replace('(', '').replace(')', ''))
             if 'interface' in key:
                 if intCnt == 0:
@@ -258,7 +258,7 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
         elif len(patternVars[key]) == 0:
             continue
         else:
-            config += '{}\n'.format(key)
+            config += '{}\n'.format('\n'.join([i for i in patternVars[key]]))
     config += '```;\n'
     if len(config) > 19:
         if len(show) > 0:
