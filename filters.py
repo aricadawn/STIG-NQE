@@ -60,12 +60,13 @@ def pattern(check_content, fix_content):
 
     fix = text(fix_content)
     lines = test(lines, fix)
+    counter = False
     interfaceCnt = 1
     keyCnt = 1
     ipAddCnt = 1
     passCount = 1
     subnetCount = 1
-    ipSubFilters = r'(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})/\d{1,4}'
+    ipSubFilters = r'(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\/\d{1,4}'
     for index, item in enumerate(lines):
         item = item.rstrip()
         if item.startswith(('interface', ' interface', 'int')):
@@ -91,6 +92,15 @@ def pattern(check_content, fix_content):
             subs = re.sub(ipSubFilters, '''{{subnet{}: ipv4Subnet}}''', item)
             lines[index] = subs.format(subnetCount, subnetCount + 1)
             subnetCount += 2
+        
+        if not counter:
+            if item.startswith(('interface', ' interface', 'router ')):
+                counter = True
+        elif item == '':
+            counter = False
+        else:
+            if item[0] != ' ' and not re.match(r'interface', item) and 'ip access-list' not in item:
+                lines[index] = ' ' + item
         
     
     return lines
@@ -155,7 +165,6 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
 
     pattern = [z for z in pattern if len(z) > 1]
     ipCnt = 1
-    counter = False
     for num, item in enumerate(pattern):
         '''
         1. Reformats items returned in pattern to match configuration syntax
@@ -177,15 +186,6 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
                ]
         for i in tup:
             item = re.sub(i[0], i[1], item)
-
-        if not counter:
-            if item.startswith(('interface', ' interface', 'router ')):
-                counter = True
-        elif item == '':
-            counter = False
-        else:
-            if item[0] != ' ' and not re.match(r'interface', item) and 'ip access-list' not in item:
-                pattern[num] = ' ' + item
 
         if showCount == 0 :
             # if re.search(r'#show|# show', item):
