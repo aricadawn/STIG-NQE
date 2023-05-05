@@ -63,7 +63,6 @@ def pattern(check_content, fix_content):
     counter = False
     interfaceCnt = 1
     keyCnt = 1
-    ipAddCnt = 1
     passCount = 1
     subnetCount = 1
     ipSubFilters = r'(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\/\d{1,4}'
@@ -77,7 +76,6 @@ def pattern(check_content, fix_content):
             keyCnt += 1
         if 'ip address' in item:
             lines[index] = ''' ip address {ip: ipv4Address}'''
-            ipAddCnt += 1
         if 'description' in item:
             lines[index] = ''' description {desc: string}'''
         if 'hostname' in item:
@@ -89,8 +87,8 @@ def pattern(check_content, fix_content):
                 lines[index] = re.sub(r'password ', r'password {{password{}: string}} '.format(passCount), item)
             passCount += 1
         if re.findall(ipSubFilters, item):
-            subs = re.sub(ipSubFilters, '''{{subnet{}: ipv4Subnet}}''', item)
-            lines[index] = subs.format(subnetCount, subnetCount + 1)
+            subs = re.sub(ipSubFilters, '''{ipv4Subnet}''', item)
+            lines[index] = re.sub(ipSubFilters, '''{ipv4Subnet}''', item)
             subnetCount += 2
         
         if not counter:
@@ -101,8 +99,7 @@ def pattern(check_content, fix_content):
         else:
             if item[0] != ' ' and not re.match(r'interface', item) and 'ip access-list' not in item:
                 lines[index] = ' ' + item
-        
-    
+
     return lines
 
 def dictionary(pattern):
@@ -155,7 +152,7 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
     show = []
     isPresent = []
     showCount = 0
-
+    nameList = []
     dictionary = {}
     def setname(d, n):
         if n.startswith('interface'):
@@ -171,11 +168,12 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
         2. Creates dictionary of pattern variables 
         '''
         ipFilters = r' (x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3}).(x|\d{1,3})'
-        name = r' ([A-Z\d]+(?:_[A-Z\d]+)+)'
+        name = r' ([A-Zo\d]+ (?:_[A-Z\d]+)+)| ([A-Z\d]+(?:_[A-Z\d]+)+)'
+        
         if re.search(ipFilters, item):
-            subs = re.sub(ipFilters, ' {{ip{}: ipv4Address}}', item)
+            subs = re.sub(ipFilters, ' {ipv4Address}', item)
             try:
-                item = subs.format(ipCnt, ipCnt + 1)
+                item = subs
             except IndexError:
                 continue
             except KeyError:
@@ -207,10 +205,10 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
         try:
             if len(item) > 0 and item not in show and not re.search(r'show', item) and item not in isPresent:
                 if item[0] != ' ':
-                    key = item
+                    key = item.rstrip()
                     setname(dictionary, key)
                 else:
-                    value = item
+                    value = item.rstrip()
                     dictionary[key].append(value)
         except KeyError:
             continue
@@ -220,11 +218,12 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
     newDictTest = []
     patternVars = {}
     for x,y in list(dictionary.items()):
-        if y not in newDictTest:
+        if x not in patternVars and y not in newDictTest:
             patternVars[x] = y
             newDictTest.append(y)
             if len(y) > 1:
-                patternVars[' '.join(x.split()[0:2])] = patternVars.pop(x)
+                if 'ip access-list' not in x:
+                    patternVars[' '.join(x.split()[0:2]).rstrip()] = patternVars.pop(x)
     distinct = []   
     for i in isPresent:
         if i not in distinct:
@@ -233,7 +232,6 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
     queryLine = ''
     config = 'pattern = ```\n'
     intCnt = 0
-    nameCnt = 1
     configCnt = 1
     where = []
     for key in patternVars:
@@ -256,13 +254,17 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
                 configCnt += 1
             for o in patternVars[key]:
                 if len(o) > 1:
-                    # o = re.sub(name, r' {\1:string}', o)
+                    if re.search(name, o):
+                        vary = re.search(name, o)
+                        if vary.group(0) not in nameList:
+                            nameList.append(vary.group(0))
+                    o = re.sub(name, r' {string}', o)
                     queryLine += '{}\n'.format(o)
             queryLine += '```; \n'
         elif len(patternVars[key]) == 0:
             continue
         else:
-            config += '{}\n'.format('\n'.join([i for i in patternVars[key]]))
+            config += '{}\n'.format('\n'.join([re.sub(name, r' {string}', i) for i in patternVars[key]]))
     config += '```;\n'
     if len(config) > 19:
         if len(show) > 0:
