@@ -3,6 +3,7 @@ import requests
 import json
 import sys
 import filters
+import query_editior
 
 # import apiVb.py file where api url and token are stored locally
 sys.path.insert(0, '/Users/aricabeckstead/')
@@ -20,14 +21,14 @@ nqe = '''
 '''
 
 STIG_csv = [
-'Cisco ASA Firewall V1R3.csv',
-'Cisco ASA NDM V1R3.csv',
-'Cisco ASA VPN V1R1.csv',
-'Cisco IOS Router NDM V2R4.csv',
-'Cisco IOS Router RTR V2R3.csv',
-'Cisco IOS Switch L2S V2R3.csv',
-'Cisco IOS Switch NDM V2R4.csv',
-'Cisco IOS Switch RTR V2R2.csv',
+# 'Cisco ASA Firewall V1R3.csv',
+# 'Cisco ASA NDM V1R3.csv',
+# 'Cisco ASA VPN V1R1.csv',
+# 'Cisco IOS Router NDM V2R4.csv',
+# 'Cisco IOS Router RTR V2R3.csv',
+# 'Cisco IOS Switch L2S V2R3.csv',
+# 'Cisco IOS Switch NDM V2R4.csv',
+# 'Cisco IOS Switch RTR V2R2.csv',
 'Cisco IOS_XE Router RTR V2R6.csv',
 # 'Cisco IOS_XE Switch RTR V2R2.csv',
 # 'Cisco NXOS Switch L2S V1R1.csv'
@@ -57,14 +58,21 @@ def STIG_NQE(NQE_txt, STIG_csv):
                h = row['Discussion']
                i = row['Fix Text']
                j = row['Check Content']
-               k, l = filters.dictionary(filters.pattern(j,i)) 
+               k, l = filters.dictionary(filters.pattern(j,i), True) 
                m = deviceOs
+               query_editior.STIG_tk(a,e,j,'\n'.join([x for x in filters.pattern(j,i)]),g)
+               n = query_editior.cust_config()
+               if len(n) != 0:
+                   k, l = filters.dictionary([y for y in n.splitlines()])
                sourceCode = nqe.format(g,h,a,b,c,d,e,k,j,i,m,a,c,d,b,e,f,l)
                payload = {'queryType': 'QUERY', 'sourceCode': sourceCode}
                # r = requests.post(API_URL.format(STIG_csv.strip('.csv'), e), json=payload, auth=TOKEN)
                # file_out.write(json.dumps(payload))
-               file_out.write('{}\n'.format(g))
-               print(e)
+               # file_out.write('{}\n'.format(g))
+               # file_out.write('\n'.join([o for o in filters.pattern(j,i)]))
+               file_out.write(k)
+               # print(len(n))
+               query_editior.clear_test()
                            
 if __name__ == '__main__':
    NQE_txt = 'queries.txt'

@@ -60,49 +60,95 @@ def pattern(check_content, fix_content):
 
     fix = text(fix_content)
     lines = test(lines, fix)
-    counter = False
-    interfaceCnt = 1
-    keyCnt = 1
-    passCount = 1
-    subnetCount = 1
-    ipSubFilters = r'(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\/\d{1,4}'
-    for index, item in enumerate(lines):
-        item = item.rstrip()
-        if item.startswith(('interface', ' interface', 'int')):
-            lines[index] = '''interface {}'''.format(interfaceCnt)
-            interfaceCnt += 1
-        if 'key-string' in item:
-            lines[index] = ''.join(item.rsplit(' ', 1)[0]) + ' {{key{}: string}}'.format(keyCnt)
-            keyCnt += 1
-        if 'ip address' in item:
-            lines[index] = ''' ip address {ip: ipv4Address}'''
-        if 'description' in item:
-            lines[index] = ''' description {desc: string}'''
-        if 'hostname' in item:
-            lines[index] = '''hostname {host: string}'''
-        if 'password' in item:
-            if re.search(r'( password \d [a-z0-9]{10,}| password [a-z0-9]+ )', item):
-                lines[index] = re.sub(r'( password \d [a-z0-9]{10,}| password [a-z0-9]+ )', r' password {{password{}: string}} '.format(passCount), item)
-            else:
-                lines[index] = re.sub(r'password ', r'password {{password{}: string}} '.format(passCount), item)
-            passCount += 1
-        if re.findall(ipSubFilters, item):
-            subs = re.sub(ipSubFilters, '''{ipv4Subnet}''', item)
-            lines[index] = re.sub(ipSubFilters, '''{ipv4Subnet}''', item)
-            subnetCount += 2
-        
-        if not counter:
-            if item.startswith(('interface', ' interface', 'router ')):
-                counter = True
-        elif item == '':
-            counter = False
-        else:
-            if item[0] != ' ' and not re.match(r'interface', item) and 'ip access-list' not in item:
-                lines[index] = ' ' + item
 
     return lines
 
-def dictionary(pattern):
+def reformat(lines):
+        counter = False
+        interfaceCnt = 1
+        keyCnt = 1
+        passCount = 1
+        subnetCount = 1
+        ipSubFilters = r'(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3})\/\d{1,4}'
+        for index, item in enumerate(lines):
+            item = item.rstrip()
+            if item.startswith(('interface', ' interface', 'int')):
+                lines[index] = '''interface {}'''.format(interfaceCnt)
+                interfaceCnt += 1
+            if 'key-string' in item:
+                lines[index] = ''.join(item.rsplit(' ', 1)[0]) + ' {{key{}: string}}'.format(keyCnt)
+                keyCnt += 1
+            if 'ip address' in item:
+                lines[index] = ''' ip address {ip: ipv4Address}'''
+            if 'description' in item:
+                lines[index] = ''' description {desc: string}'''
+            if 'hostname' in item:
+                lines[index] = '''hostname {host: string}'''
+            if 'password' in item:
+                if re.search(r'( password \d [a-z0-9]{10,}| password [a-z0-9]+ )', item):
+                    lines[index] = re.sub(r'( password \d [a-z0-9]{10,}| password [a-z0-9]+ )', r' password {{password{}: string}} '.format(passCount), item)
+                else:
+                    lines[index] = re.sub(r'password ', r'password {{password{}: string}} '.format(passCount), item)
+                passCount += 1
+            if re.findall(ipSubFilters, item):
+                subs = re.sub(ipSubFilters, '''{ipv4Subnet}''', item)
+                lines[index] = re.sub(ipSubFilters, '''{ipv4Subnet}''', item)
+                subnetCount += 2
+            
+            if not counter:
+                if item.startswith(('interface', ' interface', 'router ')):
+                    counter = True
+            elif item == '':
+                counter = False
+            else:
+                if item[0] != ' ' and not re.match(r'interface', item) and 'ip access-list' not in item:
+                    lines[index] = ' ' + item
+        show = []
+        isPresent = []
+        showCount = 0
+
+        for num, item in enumerate(lines):
+            '''
+            1. Reformats items returned in pattern to match configuration syntax
+            2. Creates dictionary of pattern variables 
+            '''
+            ipFilters = r' (x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3}).(x|\d{1,3})'
+            
+            if re.search(ipFilters, item):
+                subs = re.sub(ipFilters, ' {ipv4Address}', item)
+                try:
+                    item = subs
+                except IndexError:
+                    continue
+                except KeyError:
+                    continue
+
+            if showCount == 0 :
+                if re.search(r'show', item):
+                    showCount += 1
+                    if re.search(r'#', item):
+                        custom = custom.format(item.split('#')[1].lstrip())
+                    else:
+                        custom = custom.format(item)
+            elif item != '' and not re.search(r'#', item):
+                show.append(item)    
+            if re.match('^no', item) and item not in isPresent:
+                if 'interface' in lines[num-1]:
+                    isPresent.append('interface {{name{}:string}}'.format(1))
+                    isPresent.append(item)
+                else:
+                    isPresent.append(item)
+        
+        distinct = []   
+        for i in isPresent:
+            if i not in distinct:
+                distinct.append(i.rstrip())
+
+        lines = [line for line in lines if len(line) > 1]
+
+        return lines, show, isPresent, distinct
+
+def dictionary(pattern, filtered):
     '''
     1. Creates a dictionary of pattern variables by filtering through list created in pattern function.
     2. Returns pattern variables and formatted query as strings 
@@ -148,11 +194,12 @@ foreach command in outputs.commands
 where command.commandText == "{}"
 let showOutput = parseConfigBlocks(device.platform.os, command.response)
 let match = max(blockMatches_alpha1(showOutput, show))'''
-
-    show = []
-    isPresent = []
-    showCount = 0
-    nameList = []
+    if not filtered:
+        show = []
+        isPresent = []
+        distinct = []
+    else:
+        pattern, show, isPresent, distinct = reformat(pattern)
     dictionary = {}
     def setname(d, n):
         if n.startswith('interface'):
@@ -160,48 +207,17 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
         else:
            d[n] = [n]
 
-    pattern = [z for z in pattern if len(z) > 1]
-    ipCnt = 1
-    for num, item in enumerate(pattern):
+    for item in pattern:
         '''
         1. Reformats items returned in pattern to match configuration syntax
         2. Creates dictionary of pattern variables 
         '''
-        ipFilters = r' (x|\d{1,3})\.(x|\d{1,3})\.(x|\d{1,3}).(x|\d{1,3})'
         name = r' ([A-Zo\d]+ (?:_[A-Z\d]+)+)| ([A-Z\d]+(?:_[A-Z\d]+)+)'
-        
-        if re.search(ipFilters, item):
-            subs = re.sub(ipFilters, ' {ipv4Address}', item)
-            try:
-                item = subs
-            except IndexError:
-                continue
-            except KeyError:
-                continue
-            ipCnt += 2
         tup = [(r' [nxyz]{2,}', ' '), (r'^deny', ' deny'), (r'^permit', ' permit'), (r'^neighbor', ' neighbor'), (r'^remark', ' remark'), (r'^or$', ' '), 
                (r'^switchport', ' switchport'), (r'(^\d{1,3})', r' \1'), (r'Interface', 'interface'), (r'\*{2,}', '')
                ]
         for i in tup:
             item = re.sub(i[0], i[1], item)
-
-        if showCount == 0 :
-            # if re.search(r'#show|# show', item):
-            if re.search(r'show', item):
-                showCount += 1
-                if re.search(r'#', item):
-                    custom = custom.format(item.split('#')[1].lstrip())
-                else:
-                    custom = custom.format(item)
-        elif item != '' and not re.search(r'#', item):
-            show.append(item)    
-        if re.match('^no', item) and item not in isPresent:
-            if 'interface' in pattern[num-1]:
-                isPresent.append('interface {{name{}:string}}'.format(1))
-                isPresent.append(item)
-            else:
-                isPresent.append(item)
-        
         try:
             if len(item) > 0 and item not in show and not re.search(r'show', item) and item not in isPresent:
                 if item[0] != ' ':
@@ -224,15 +240,12 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
             if len(y) > 1:
                 if 'ip access-list' not in x:
                     patternVars[' '.join(x.split()[0:2]).rstrip()] = patternVars.pop(x)
-    distinct = []   
-    for i in isPresent:
-        if i not in distinct:
-            distinct.append(i.rstrip())
 
     queryLine = ''
     config = 'pattern = ```\n'
     intCnt = 0
     configCnt = 1
+    nameList = []
     where = []
     for key in patternVars:
         '''
@@ -254,11 +267,12 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
                 configCnt += 1
             for o in patternVars[key]:
                 if len(o) > 1:
-                    if re.search(name, o):
-                        vary = re.search(name, o)
-                        if vary.group(0) not in nameList:
-                            nameList.append(vary.group(0))
-                    o = re.sub(name, r' {string}', o)
+                    if filtered:
+                        if re.search(name, o):
+                            vary = re.search(name, o)
+                            if vary.group(0) not in nameList:
+                                nameList.append(vary.group(0))
+                        o = re.sub(name, r' {string}', o)
                     queryLine += '{}\n'.format(o)
             queryLine += '```; \n'
         elif len(patternVars[key]) == 0:
