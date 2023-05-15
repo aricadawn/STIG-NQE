@@ -61,12 +61,12 @@ def STIG_NQE(NQE_txt, STIG_csv):
                i = row['Fix Text']
                j = row['Check Content']
                k = cf.pattern(j,i)
-               # query_editior.STIG_tk(a,e,j,'\n'.join([x for x in k]),g)
+               query_editior.STIG_tk(a,e,j,'\n'.join([x for x in k]),g)
                l, m = qc.stig_pattern(k) 
                n = deviceOs
-               # o = query_editior.cust_config()
-               # if len(o) != 0:
-               #     l, m = qc.cust_config([y for y in o.splitlines()], k, False)
+               o = query_editior.cust_config()
+               if len(o) != 0:
+                   l, m = qc.cust_config([y for y in o.splitlines()], k, False)
                sourceCode = nqe.format(g,h,a,b,c,d,e,l,j,i,n,a,c,d,b,e,f,m)
                payload = {'queryType': 'QUERY', 'sourceCode': sourceCode}
                # r = requests.post(API_URL.format(STIG_csv.strip('.csv'), e), json=payload, auth=TOKEN)
