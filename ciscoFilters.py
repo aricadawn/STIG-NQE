@@ -1,5 +1,7 @@
 import re
 from query_creator import query_creator
+import custom_test as cs
+from STIG_NQE import TOKEN
 
 def fix_text(fix_content):
     '''
@@ -136,7 +138,7 @@ def reformat(config_lines):
     return config_lines
 
 def show_isPresent(config_lines, filtered, showCount):
-
+    name = r'([A-Zo\d]+) ?(?:_[A-Z\d]+)+|([A-Z]{5,})'
     show = []
     isPresent = []
     custom = '''let outputs = device.outputs
@@ -150,7 +152,10 @@ let match = max(blockMatches_alpha1(showOutput, show))'''
             if re.search(r'show', item):
                 showCount += 1
                 if re.search(r'#', item):
+                    item = re.sub(name, '', item)
+                    cs.custom(item.split('#')[1].lstrip())
                     custom = custom.format(item.split('#')[1].lstrip())
+                    # print(item)
                 else:
                     custom = custom.format(item)
         elif item != '' and not re.search(r'#', item):
