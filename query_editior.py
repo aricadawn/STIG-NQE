@@ -9,11 +9,7 @@ def STIG_tk(vuln, stig, check, config, rule):
         with open('test.txt', 'w') as test:
             test.write(cust_config_entry.get("1.0", 'end-1c')) 
         root.destroy()
-        
-        # global config
-        # config = cust_config_entry.get()
-        # return config
-    
+            
     
     root = tkinter.Tk()
     width= root.winfo_screenwidth()               
@@ -80,6 +76,3 @@ def cust_config():
 def clear_test():
     with open('test.txt', 'w') as fle:
         fle.write('')
-    
-if __name__ == "__main__":
-    STIG_tk('1234', 'cisc-l2', 'loooooooooooong long long test text text', 'k', 'l')

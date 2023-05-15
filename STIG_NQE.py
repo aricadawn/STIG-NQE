@@ -2,7 +2,9 @@ import csv
 import requests
 import json
 import sys
-import filters
+import ciscoFilters as cf
+import query_creator as qc
+
 import query_editior
 
 # import apiVb.py file where api url and token are stored locally
@@ -21,19 +23,19 @@ nqe = '''
 '''
 
 STIG_csv = [
-# 'Cisco ASA Firewall V1R3.csv',
-# 'Cisco ASA NDM V1R3.csv',
-# 'Cisco ASA VPN V1R1.csv',
-# 'Cisco IOS Router NDM V2R4.csv',
-# 'Cisco IOS Router RTR V2R3.csv',
-# 'Cisco IOS Switch L2S V2R3.csv',
-# 'Cisco IOS Switch NDM V2R4.csv',
-# 'Cisco IOS Switch RTR V2R2.csv',
+'Cisco ASA Firewall V1R3.csv',
+'Cisco ASA NDM V1R3.csv',
+'Cisco ASA VPN V1R1.csv',
+'Cisco IOS Router NDM V2R4.csv',
+'Cisco IOS Router RTR V2R3.csv',
+'Cisco IOS Switch L2S V2R3.csv',
+'Cisco IOS Switch NDM V2R4.csv',
+'Cisco IOS Switch RTR V2R2.csv',
 'Cisco IOS_XE Router RTR V2R6.csv',
-# 'Cisco IOS_XE Switch RTR V2R2.csv',
-# 'Cisco NXOS Switch L2S V1R1.csv'
-# 'Cisco NXOS Switch NDM V2R3.csv',
-# 'Cisco NXOS Switch RTR V2R1.csv'
+'Cisco IOS_XE Switch RTR V2R2.csv',
+'Cisco NXOS Switch L2S V1R1.csv',
+'Cisco NXOS Switch NDM V2R3.csv',
+'Cisco NXOS Switch RTR V2R1.csv'
 ]
 
 def STIG_NQE(NQE_txt, STIG_csv):
@@ -44,7 +46,7 @@ def STIG_NQE(NQE_txt, STIG_csv):
    4. Creates API POST to create NQE for each STIG.
    '''
    # r = requests.post(creat_dir, auth = TOKEN) 
-   with open(NQE_txt, 'w') as file_out:
+   with open(NQE_txt, 'a') as file_out:
       with open(STIG_csv, 'r') as file_in:
          reader = csv.DictReader(file_in)
          for row in reader:
@@ -58,20 +60,19 @@ def STIG_NQE(NQE_txt, STIG_csv):
                h = row['Discussion']
                i = row['Fix Text']
                j = row['Check Content']
-               k, l = filters.dictionary(filters.pattern(j,i), True) 
-               m = deviceOs
-               query_editior.STIG_tk(a,e,j,'\n'.join([x for x in filters.pattern(j,i)]),g)
-               n = query_editior.cust_config()
-               if len(n) != 0:
-                   k, l = filters.dictionary([y for y in n.splitlines()])
-               sourceCode = nqe.format(g,h,a,b,c,d,e,k,j,i,m,a,c,d,b,e,f,l)
+               k = cf.pattern(j,i)
+               # query_editior.STIG_tk(a,e,j,'\n'.join([x for x in k]),g)
+               l, m = qc.stig_pattern(k) 
+               n = deviceOs
+               # o = query_editior.cust_config()
+               # if len(o) != 0:
+               #     l, m = qc.cust_config([y for y in o.splitlines()], k, False)
+               sourceCode = nqe.format(g,h,a,b,c,d,e,l,j,i,n,a,c,d,b,e,f,m)
                payload = {'queryType': 'QUERY', 'sourceCode': sourceCode}
                # r = requests.post(API_URL.format(STIG_csv.strip('.csv'), e), json=payload, auth=TOKEN)
                # file_out.write(json.dumps(payload))
                # file_out.write('{}\n'.format(g))
-               # file_out.write('\n'.join([o for o in filters.pattern(j,i)]))
-               file_out.write(k)
-               # print(len(n))
+               file_out.write(l)
                query_editior.clear_test()
                            
 if __name__ == '__main__':
