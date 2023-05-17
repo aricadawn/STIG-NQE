@@ -1,7 +1,6 @@
 import requests
 import json
 from STIG_NQE import TOKEN
-global netID
 netID = input('Network ID: ')
 
 def custom(command):
