@@ -1,10 +1,11 @@
 import requests
 import json
-from STIG_NQE import TOKEN 
-from STIG_NQE import custom_url
+from STIG_NQE import TOKEN
+global netID
+netID = input('Network ID: ')
 
 def custom(command):
-    API_URL = custom_url
+    API_URL = 'https://fwd.app/api/networks/{}/custom-command-groups'.format(netID)
     PATCH_URL = API_URL + '/stig'
 
     r = requests.get(API_URL, auth=TOKEN)
@@ -21,4 +22,3 @@ def custom(command):
             if command not in item['commands']:
                 item['commands'].append(command)
                 r = requests.patch(PATCH_URL, json=item, auth=TOKEN)
-

@@ -1,5 +1,4 @@
 import re
-from query_creator import query_creator
 import custom_test as cs
 from STIG_NQE import TOKEN
 

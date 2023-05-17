@@ -16,8 +16,6 @@ import apiVb #type:ignore
 
 API_URL = apiVb.API_URL
 TOKEN = apiVb.TOKEN_CSLAB
-netID = input('Network ID: ')
-custom_url = 'https://fwd.app/api/networks/{}/custom-command-groups'.format(netID)
 # JSON formatted NQE 
 nqe = '''
 /**\n * @intent {}\n\n * @description {}\n\n * Version//Revision: V2R4\n * Vuln ID: {}\n * Severity: {}\n * Group Title: {}\n * Rule ID: {}\n * Rule_Version: {}\n */\n\n{}\n\n/* \nCheck Content: {}\n*/\n\n/* \nFix Text: {}\n*/\n\nstigData =\n  {{ os: OS.{},\n    vulnId: "{}",\n    groupTitle: "{}",\n    ruleId: "{}",\n    severity: "{}",\n    ruleVersion: "{}",\n    legacyVulns: "[{}]"\n  }}; \n{}
@@ -76,7 +74,7 @@ def STIG_NQE(NQE_txt, STIG_csv):
                file_out.write(l)
                query_editior.clear_test()
    # r = requests.post('https://fwd.app/api/networks/157899/startcollection', auth=TOKEN)
-                           
+
 if __name__ == '__main__':
    NQE_txt = 'queries.txt'
    for stig in STIG_csv:
