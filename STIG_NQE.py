@@ -4,15 +4,10 @@ import json
 import sys
 import filters
 
-# import apiVb.py file where api url and token are stored locally
-sys.path.insert(0, '/Users/aricabeckstead/')
-import apiVb #type:ignore
-# EXAMPLE:
-# API_URL = "https://fwd.app/api/users/current/nqe/changes?action=addQuery&path=/{FOLDER}/{QUERY-NAME}"
-# TOKEN = ('ACCESS-KEY', 'SECRET-KEY')
 
-API_URL = apiVb.API_URL
-TOKEN = apiVb.korg
+HOST = "fwd.app" #replace with instance URL or ip
+API_URL = "API_URL = "https://{}/api/users/current/nqe/changes?action=addQuery&path=/STIGS_PY/{}/{}"
+TOKEN = ('ACCESS-KEY', 'SECRET-KEY')
 
 # JSON formatted NQE 
 nqe = '''
@@ -39,8 +34,9 @@ def STIG_NQE(NQE_txt, STIG_csv):
    '''
    1. file_out stores queries in txt file - used for testing.
    2. file_in is an export of STIG in csv format.
-   3. Iterates over file_in to retrieve relevant stig information and create NQE.
-   4. Creates API POST to create NQE for each STIG.
+   3. Iterates over file_in to retrieve relevant stig information.
+   4. Passes file_in through filters.py to reformat data in order to create NQE.
+   5. Creates API POST to create NQE for each STIG.
    '''
    r = requests.post(creat_dir, auth = TOKEN) 
    with open(NQE_txt, 'w') as file_out:
@@ -61,7 +57,7 @@ def STIG_NQE(NQE_txt, STIG_csv):
                m = deviceOs
                sourceCode = nqe.format(g,h,a,b,c,d,e,k,j,i,m,a,c,d,b,e,f,l)
                payload = {'queryType': 'QUERY', 'sourceCode': sourceCode}
-               r = requests.post(API_URL.format(STIG_csv.strip('.csv'), e), json=payload, auth=TOKEN)
+               r = requests.post(API_URL.format(HOST, STIG_csv.strip('.csv'), e), json=payload, auth=TOKEN)
                # file_out.write(json.dumps(payload))
                file_out.write(k)
                print(e)
@@ -70,5 +66,5 @@ if __name__ == '__main__':
    NQE_txt = 'queries.txt'
    for stig in STIG_csv:
        deviceOs = stig.split()[1]
-       creat_dir = 'https://fwd.app/api/users/current/nqe/changes?action=addDir&path=/Arica/{}/'.format(stig.strip('.csv'))
+       creat_dir = 'https://{}/api/users/current/nqe/changes?action=addDir&path=/STIGS_PY/{}/'.format(HOST, stig.strip('.csv'))
        STIG_NQE(NQE_txt, stig)
